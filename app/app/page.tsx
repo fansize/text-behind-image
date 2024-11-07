@@ -71,7 +71,7 @@ const Page = () => {
     };
 
     const handleAttributeChange = (id: number, attribute: string, value: any) => {
-        setTextSets(prev => prev.map(set => 
+        setTextSets(prev => prev.map(set =>
             set.id === id ? { ...set, [attribute]: value } : set
         ));
     };
@@ -87,19 +87,19 @@ const Page = () => {
 
     const saveCompositeImage = () => {
         if (!canvasRef.current || !isImageSetupDone) return;
-    
+
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
-    
+
         const bgImg = new (window as any).Image();
         bgImg.crossOrigin = "anonymous";
         bgImg.onload = () => {
             canvas.width = bgImg.width;
             canvas.height = bgImg.height;
-    
+
             ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-    
+
             textSets.forEach(textSet => {
                 ctx.save(); // Save the current state
                 ctx.font = `${textSet.fontWeight} ${textSet.fontSize * 3}px ${textSet.fontFamily}`;
@@ -107,17 +107,17 @@ const Page = () => {
                 ctx.globalAlpha = textSet.opacity;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-    
+
                 const x = canvas.width * (textSet.left + 50) / 100;
                 const y = canvas.height * (50 - textSet.top) / 100;
-    
+
                 // Move the context to the text position and rotate
                 ctx.translate(x, y);
                 ctx.rotate((textSet.rotation * Math.PI) / 180); // Convert degrees to radians
                 ctx.fillText(textSet.text, 0, 0); // Draw text at the origin (0, 0)
                 ctx.restore(); // Restore the original state
             });
-    
+
             if (removedBgImageUrl) {
                 const removedBgImg = new (window as any).Image();
                 removedBgImg.crossOrigin = "anonymous";
@@ -131,7 +131,7 @@ const Page = () => {
             }
         };
         bgImg.src = selectedImage || '';
-    
+
         function triggerDownload() {
             const dataUrl = canvas.toDataURL('image/png');
             const link = document.createElement('a');
@@ -172,11 +172,11 @@ const Page = () => {
                             <div className="min-h-[400px] w-[80%] p-4 border border-border rounded-lg relative overflow-hidden">
                                 {isImageSetupDone ? (
                                     <Image
-                                        src={selectedImage} 
+                                        src={selectedImage}
                                         alt="Uploaded"
                                         layout="fill"
-                                        objectFit="contain" 
-                                        objectPosition="center" 
+                                        objectFit="contain"
+                                        objectPosition="center"
                                     />
                                 ) : (
                                     <span className='flex items-center w-full gap-2'><ReloadIcon className='animate-spin' /> Loading, please wait</span>
@@ -205,17 +205,17 @@ const Page = () => {
                                         src={removedBgImageUrl}
                                         alt="Removed bg"
                                         layout="fill"
-                                        objectFit="contain" 
-                                        objectPosition="center" 
+                                        objectFit="contain"
+                                        objectPosition="center"
                                         className="absolute top-0 left-0 w-full h-full"
-                                    /> 
+                                    />
                                 )}
                             </div>
                             <div className='flex flex-col w-full'>
-                                <Button variant={'secondary'} onClick={addNewTextSet}><PlusIcon className='mr-2'/> Add New Text Set</Button>
+                                <Button variant={'secondary'} onClick={addNewTextSet}><PlusIcon className='mr-2' /> Add New Text Set</Button>
                                 <Accordion type="single" collapsible className="w-full mt-2">
                                     {textSets.map(textSet => (
-                                        <TextCustomizer 
+                                        <TextCustomizer
                                             key={textSet.id}
                                             textSet={textSet}
                                             handleAttributeChange={handleAttributeChange}
@@ -224,7 +224,7 @@ const Page = () => {
                                         />
                                     ))}
                                 </Accordion>
-                                
+
                                 <canvas ref={canvasRef} style={{ display: 'none' }} />
                                 <Button onClick={saveCompositeImage}>
                                     Save image
