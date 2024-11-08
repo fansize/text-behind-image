@@ -226,7 +226,12 @@ const Page = () => {
                                 </Accordion>
 
                                 <canvas ref={canvasRef} style={{ display: 'none' }} />
-                                <Button onClick={saveCompositeImage}>
+                                <Button
+                                    onClick={saveCompositeImage}
+                                    data-umami-event="Save Image"
+                                    data-umami-event-type="action"
+                                    data-umami-event-text_count={textSets.length.toString()}
+                                >
                                     Save image
                                 </Button>
                             </div>

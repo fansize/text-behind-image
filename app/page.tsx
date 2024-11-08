@@ -26,7 +26,14 @@ const page = () => {
                     {" "} designs easily
                 </motion.h1>
             </HeroHighlight>
-            <Link href={'/app'} className='mb-10'>
+
+            <Link
+                href={'/app'}
+                className='mb-10'
+                data-umami-event="Open App Click"
+                data-umami-event-type="navigation"
+                data-umami-event-location="home_hero"
+            >
                 <HoverBorderGradient containerClassName="rounded-full" as="button" className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2">
                     Open the app
                 </HoverBorderGradient>
