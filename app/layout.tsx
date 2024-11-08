@@ -7,6 +7,7 @@ import SupabaseProvider from "@/providers/SupabaseProvider";
 import UserProvider from "@/providers/UserProvider";
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from "@/components/theme-provider";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -56,6 +57,11 @@ export default function RootLayout({
                 <Analytics />
                 <SpeedInsights />
                 <Toaster />
+                <Script
+                  src="https://cloud.umami.is/script.js"
+                  data-website-id="262dc8a3-e37b-4b0f-86c2-cddbdcfd18da"
+                  strategy="afterInteractive"
+                />
               </div>
             </ThemeProvider>
           </UserProvider>
