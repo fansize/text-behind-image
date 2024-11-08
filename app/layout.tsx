@@ -11,8 +11,28 @@ import { ThemeProvider } from "@/components/theme-provider";
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: "Text Behind Image",
-  description: "Create text behind image designs",
+  title: "Text Behind Image | Free Online Image Text Overlay Tool",
+  description: "Create professional text overlays on images easily. Perfect for Google Slides, presentations, social media posts, and graphic design. Free online tool for putting text behind or in front of images.",
+  keywords: "text behind image, image text overlay, Google Slides text overlay, image editing tool, text on images, graphic design tool",
+  openGraph: {
+    title: "Text Behind Image | Free Online Image Text Overlay Tool",
+    description: "Create professional text overlays on images easily. Perfect for Google Slides, presentations, social media posts, and graphic design.",
+    type: "website",
+    locale: "en_US",
+    images: [
+      {
+        url: "/og-image.jpg", // 建议添加一个实际的 OG 图片
+        width: 1200,
+        height: 630,
+        alt: "Text Behind Image Tool Preview",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Text Behind Image | Free Online Image Text Overlay Tool",
+    description: "Create professional text overlays on images easily. Perfect for Google Slides, presentations, and graphic design.",
+  },
 };
 
 export default function RootLayout({
@@ -24,21 +44,21 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <SupabaseProvider>
-            <UserProvider>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="light"
-                enableSystem
-                disableTransitionOnChange
-              >
-                <div>
-                  {children}
-                  <Analytics />
-                  <SpeedInsights />
-                  <Toaster />
-                </div>
-              </ThemeProvider>
-            </UserProvider>
+          <UserProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="light"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <div>
+                {children}
+                <Analytics />
+                <SpeedInsights />
+                <Toaster />
+              </div>
+            </ThemeProvider>
+          </UserProvider>
         </SupabaseProvider>
       </body>
     </html>
