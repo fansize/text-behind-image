@@ -54,12 +54,12 @@ export default function RootLayout({
             >
               <div>
                 {children}
+                <Toaster />
                 <Analytics />
                 <SpeedInsights />
-                <Toaster />
                 <Script
-                  src="https://cloud.umami.is/script.js"
-                  data-website-id="262dc8a3-e37b-4b0f-86c2-cddbdcfd18da"
+                  src="/stats/script.js"
+                  data-website-id="60aa6913-6f99-4cb2-bfea-80d9b06ad74b"
                   strategy="afterInteractive"
                 />
               </div>
