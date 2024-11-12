@@ -8,13 +8,14 @@ import { HoverBorderGradient } from '@/components/ui/hover-border-gradient';
 import { HeroParallaxImages } from '@/components/hero-parallax-images';
 import { AdditionalInfo } from '@/components/additional-info';
 import { HeroSection } from '@/components/hero-section';
-import Link from 'next/link';
+import { FAQ } from '@/components/faq';
 
 const page = () => {
     return (
         <div className='flex flex-col min-h-screen items-center w-full'>
             <HeroSection />
             <HeroParallaxImages />
+            <FAQ />
         </div>
     );
 }
