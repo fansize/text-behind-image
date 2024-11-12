@@ -56,12 +56,12 @@ const Page = () => {
         const newId = Math.max(...textSets.map(set => set.id), 0) + 1;
         setTextSets(prev => [...prev, {
             id: newId,
-            text: 'edit',
+            text: 'OHHH!',
             fontFamily: 'Inter',
-            top: 0,
+            top: 20,
             left: 0,
             color: 'white',
-            fontSize: 200,
+            fontSize: 150,
             fontWeight: 800,
             opacity: 1,
             shadowColor: 'rgba(0, 0, 0, 0.8)',
@@ -142,110 +142,122 @@ const Page = () => {
     };
 
     return (
-        <>
-            {user && session && session.user ? (
-                <div className='flex flex-col min-h-screen'>
-                    <div className='flex flex-row items-center justify-between p-5 px-10'>
-                        <h2 className="text-2xl font-semibold tracking-tight">
-                            Text behind image editor
-                        </h2>
-                        <div className='flex gap-4'>
-                            <input
-                                type="file"
-                                ref={fileInputRef}
-                                style={{ display: 'none' }}
-                                onChange={handleFileChange}
-                                accept=".jpg, .jpeg, .png" // Updated to accept only jpg and png
-                            />
-                            <Button onClick={handleUploadImage}>
-                                Upload image
-                            </Button>
-                            <ModeToggle />
-                            <Avatar>
-                                <AvatarImage src={user?.user_metadata.avatar_url} />
-                            </Avatar>
-                        </div>
-                    </div>
-                    <Separator />
-                    {selectedImage ? (
-                        <div className='flex flex-row items-start justify-start gap-10 w-full h-screen p-10'>
-                            <div className="min-h-[400px] w-[80%] p-4 border border-border rounded-lg relative overflow-hidden">
-                                {isImageSetupDone ? (
-                                    <Image
-                                        src={selectedImage}
-                                        alt="Uploaded"
-                                        layout="fill"
-                                        objectFit="contain"
-                                        objectPosition="center"
-                                    />
-                                ) : (
-                                    <span className='flex items-center w-full gap-2'><ReloadIcon className='animate-spin' /> Loading, please wait</span>
-                                )}
-                                {isImageSetupDone && textSets.map(textSet => (
-                                    <div
-                                        key={textSet.id}
-                                        style={{
-                                            position: 'absolute',
-                                            top: `${50 - textSet.top}%`,
-                                            left: `${textSet.left + 50}%`,
-                                            transform: `translate(-50%, -50%) rotate(${textSet.rotation}deg)`,
-                                            color: textSet.color,
-                                            textAlign: 'center',
-                                            fontSize: `${textSet.fontSize}px`,
-                                            fontWeight: textSet.fontWeight,
-                                            fontFamily: textSet.fontFamily,
-                                            opacity: textSet.opacity
-                                        }}
-                                    >
-                                        {textSet.text}
-                                    </div>
-                                ))}
-                                {removedBgImageUrl && (
-                                    <Image
-                                        src={removedBgImageUrl}
-                                        alt="Removed bg"
-                                        layout="fill"
-                                        objectFit="contain"
-                                        objectPosition="center"
-                                        className="absolute top-0 left-0 w-full h-full"
-                                    />
-                                )}
-                            </div>
-                            <div className='flex flex-col w-full'>
-                                <Button variant={'secondary'} onClick={addNewTextSet}><PlusIcon className='mr-2' /> Add New Text Set</Button>
-                                <Accordion type="single" collapsible className="w-full mt-2">
-                                    {textSets.map(textSet => (
-                                        <TextCustomizer
-                                            key={textSet.id}
-                                            textSet={textSet}
-                                            handleAttributeChange={handleAttributeChange}
-                                            removeTextSet={removeTextSet}
-                                            duplicateTextSet={duplicateTextSet}
-                                        />
-                                    ))}
-                                </Accordion>
+        <div className='flex flex-col min-h-screen'>
+            <div className='flex flex-row items-center justify-between p-5 px-5 md:px-10'>
+                <input
+                    type="file"
+                    ref={fileInputRef}
+                    style={{ display: 'none' }}
+                    onChange={handleFileChange}
+                    accept=".jpg, .jpeg, .png"
+                />
 
-                                <canvas ref={canvasRef} style={{ display: 'none' }} />
-                                <Button
-                                    onClick={saveCompositeImage}
-                                    data-umami-event="Save Image"
-                                    data-umami-event-type="action"
-                                    data-umami-event-text_count={textSets.length.toString()}
-                                >
-                                    Save image
-                                </Button>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className='flex items-center justify-center min-h-screen w-full'>
-                            <h2 className="text-xl font-semibold">Welcome, get started by uploading an image!</h2>
-                        </div>
+                <Button
+                    onClick={handleUploadImage}
+                    data-umami-event="Upload Image Nav"
+                    data-umami-event-type="action"
+                >
+                    Upload image
+                </Button>
+
+                <div className='flex flex-row gap-4 items-center'>
+                    {user && (
+                        <Avatar className='h-8 w-8'>
+                            <AvatarImage src={user?.user_metadata.avatar_url} />
+                        </Avatar>
                     )}
+
+                    <ModeToggle />
+                </div>
+            </div>
+
+            <Separator />
+
+            {selectedImage ? (
+                <div className='flex flex-col md:flex-row items-start justify-start gap-10 w-full h-screen p-5 md:p-10'>
+                    <div className="min-h-[400px] w-full p-4 border rounded-lg relative overflow-hidden">
+                        {isImageSetupDone ? (
+                            <Image
+                                src={selectedImage}
+                                alt="Uploaded"
+                                layout="fill"
+                                objectFit="contain"
+                                objectPosition="center"
+                            />
+                        ) : (
+                            <span className='flex items-center w-full gap-2'><ReloadIcon className='animate-spin' /> Loading Image ...</span>
+                        )}
+                        {isImageSetupDone && textSets.map(textSet => (
+                            <div
+                                key={textSet.id}
+                                style={{
+                                    position: 'absolute',
+                                    top: `${50 - textSet.top}%`,
+                                    left: `${textSet.left + 50}%`,
+                                    transform: `translate(-50%, -50%) rotate(${textSet.rotation}deg)`,
+                                    color: textSet.color,
+                                    textAlign: 'center',
+                                    fontSize: `${textSet.fontSize}px`,
+                                    fontWeight: textSet.fontWeight,
+                                    fontFamily: textSet.fontFamily,
+                                    opacity: textSet.opacity
+                                }}
+                            >
+                                {textSet.text}
+                            </div>
+                        ))}
+                        {removedBgImageUrl && (
+                            <Image
+                                src={removedBgImageUrl}
+                                alt="Removed bg"
+                                layout="fill"
+                                objectFit="contain"
+                                objectPosition="center"
+                                className="absolute top-0 left-0 w-full h-full"
+                            />
+                        )}
+                    </div>
+
+                    <div className='flex flex-col w-full'>
+                        <Button variant={'secondary'} onClick={addNewTextSet}><PlusIcon className='mr-2' />Add New Text</Button>
+                        <Accordion type="single" collapsible className="w-full mt-2">
+                            {textSets.map(textSet => (
+                                <TextCustomizer
+                                    key={textSet.id}
+                                    textSet={textSet}
+                                    handleAttributeChange={handleAttributeChange}
+                                    removeTextSet={removeTextSet}
+                                    duplicateTextSet={duplicateTextSet}
+                                />
+                            ))}
+                        </Accordion>
+
+                        <canvas ref={canvasRef} style={{ display: 'none' }} />
+
+                        <Button
+                            onClick={saveCompositeImage}
+                            className='mb-8'
+                            data-umami-event="Save Image"
+                            data-umami-event-type="action"
+                            data-umami-event-text_count={textSets.length.toString()}
+                        >
+                            Save image
+                        </Button>
+                    </div>
                 </div>
             ) : (
-                <Authenticate />
+                <div className='flex flex-col items-center justify-center min-h-[80vh] w-full gap-4'>
+                    <h2 className="text-xl font-semibold">Welcome, get started by uploading an image!</h2>
+                    <Button
+                        onClick={handleUploadImage}
+                        data-umami-event="Upload Image Main"
+                        data-umami-event-type="action"
+                    >
+                        Upload image
+                    </Button>
+                </div>
             )}
-        </>
+        </div>
     );
 }
 
