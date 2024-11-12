@@ -58,7 +58,7 @@ export default function RootLayout({
                 <Analytics />
                 <SpeedInsights />
                 <Script
-                  src="/stats/script.js"
+                  src="https://umami-selfhost-dusky.vercel.app/script.js"
                   data-website-id="60aa6913-6f99-4cb2-bfea-80d9b06ad74b"
                   strategy="afterInteractive"
                 />
