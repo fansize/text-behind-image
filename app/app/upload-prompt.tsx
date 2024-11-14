@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { useRef } from 'react';
+import { UploadIcon } from '@radix-ui/react-icons';
 
 interface UploadPromptProps {
     onImageSelect: (imageUrl: string, removedBgUrl?: string) => void;
@@ -18,7 +19,7 @@ const STRINGS = {
         {
             id: 1,
             name: 'template1',
-            originalUrl: '/templates/template1.jpg',
+            originalUrl: '/templates/template1.png',
             removedBgUrl: '/templates/template1-nobg.png'
         },
         {
@@ -30,7 +31,7 @@ const STRINGS = {
         {
             id: 3,
             name: 'template3',
-            originalUrl: '/templates/template3.jpg',
+            originalUrl: '/templates/template3.png',
             removedBgUrl: '/templates/template3-nobg.png'
         },
     ]
@@ -65,9 +66,8 @@ const UploadPrompt = ({ onImageSelect }: UploadPromptProps) => {
                 accept=".jpg, .jpeg, .png"
             />
 
-            <div className="text-center">
-                <h2 className="text-xl font-semibold mb-2">{STRINGS.title}</h2>
-                <p className="text-muted-foreground">{STRINGS.subtitle}</p>
+            <div className="text-center mt-8 md:mt-2">
+                <h2 className="text-xl font-semibold">{STRINGS.title}</h2>
             </div>
 
             <Button
@@ -76,11 +76,12 @@ const UploadPrompt = ({ onImageSelect }: UploadPromptProps) => {
                 data-umami-event-type="action"
                 size="lg"
             >
+                <UploadIcon className='mr-2' />
                 {STRINGS.uploadButton}
             </Button>
 
-            <div className="text-center mt-8">
-                <h3 className="text-lg font-medium mb-4">{STRINGS.templateSection}</h3>
+            <div className="text-center mt-12">
+                <h3 className="text-sm font-medium mb-4 text-gray-600">{STRINGS.templateSection}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {defaultTemplates.map((template) => (
                         <div
@@ -88,7 +89,7 @@ const UploadPrompt = ({ onImageSelect }: UploadPromptProps) => {
                             className="relative group cursor-pointer"
                             onClick={() => onImageSelect(template.originalUrl, template.removedBgUrl)}
                         >
-                            <div className="relative w-[200px] h-[150px] overflow-hidden rounded-lg">
+                            <div className="relative w-[400px] h-[250px] overflow-hidden rounded-lg">
                                 <Image
                                     src={template.originalUrl}
                                     alt={template.name}
@@ -97,7 +98,7 @@ const UploadPrompt = ({ onImageSelect }: UploadPromptProps) => {
                                 />
                             </div>
                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
-                                <span className="text-white font-medium">{STRINGS.useTemplate}</span>
+                                <span className="text-white text-sm">{STRINGS.useTemplate}</span>
                             </div>
                         </div>
                     ))}

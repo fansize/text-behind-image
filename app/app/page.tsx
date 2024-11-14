@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useRef, useState } from 'react';
+import Link from 'next/link';
 import { useUser } from '@/hooks/useUser';
 import { useSessionContext } from '@supabase/auth-helpers-react';
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
@@ -25,6 +26,10 @@ const Page = () => {
     const [textSets, setTextSets] = useState<Array<any>>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    // 添加常量定义
+    const MAX_IMAGE_WIDTH = 1600; // 设置最大宽度
+    const MAX_IMAGE_HEIGHT = 1200; // 设置最大高度
 
     // 处理图片选择
     const handleImageSelect = async (imageUrl: string, removedBgUrl?: string) => {
@@ -132,34 +137,50 @@ const Page = () => {
         const bgImg = new (window as any).Image();
         bgImg.crossOrigin = "anonymous";
         bgImg.onload = () => {
-            canvas.width = bgImg.width;
-            canvas.height = bgImg.height;
+            // 计算缩放比例
+            let width = bgImg.width;
+            let height = bgImg.height;
+            const ratio = Math.min(
+                MAX_IMAGE_WIDTH / width,
+                MAX_IMAGE_HEIGHT / height,
+                1 // 如果图片本身较小，则不放大
+            );
 
-            ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+            // 设置 canvas 尺寸为缩放后的尺寸
+            width = Math.floor(width * ratio);
+            height = Math.floor(height * ratio);
+            canvas.width = width;
+            canvas.height = height;
 
+            // 绘制背景
+            ctx.drawImage(bgImg, 0, 0, width, height);
+
+            // 绘制文本，使用相对尺寸
             textSets.forEach(textSet => {
-                ctx.save(); // Save the current state
-                ctx.font = `${textSet.fontWeight} ${textSet.fontSize * 3}px ${textSet.fontFamily}`;
+                ctx.save();
+                // 字体大小使用相对尺寸计算
+                const scaledFontSize = (textSet.fontSize * width) / 1000; // 1000 是一个基准值，可以调整
+                ctx.font = `${textSet.fontWeight} ${scaledFontSize}px ${textSet.fontFamily}`;
                 ctx.fillStyle = textSet.color;
                 ctx.globalAlpha = textSet.opacity;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
 
-                const x = canvas.width * (textSet.left + 50) / 100;
-                const y = canvas.height * (50 - textSet.top) / 100;
+                const x = width * (textSet.left + 50) / 100;
+                const y = height * (50 - textSet.top) / 100;
 
-                // Move the context to the text position and rotate
                 ctx.translate(x, y);
-                ctx.rotate((textSet.rotation * Math.PI) / 180); // Convert degrees to radians
-                ctx.fillText(textSet.text, 0, 0); // Draw text at the origin (0, 0)
-                ctx.restore(); // Restore the original state
+                ctx.rotate((textSet.rotation * Math.PI) / 180);
+                ctx.fillText(textSet.text, 0, 0);
+                ctx.restore();
             });
 
+            // 绘制前景图
             if (removedBgImageUrl) {
                 const removedBgImg = new (window as any).Image();
                 removedBgImg.crossOrigin = "anonymous";
                 removedBgImg.onload = () => {
-                    ctx.drawImage(removedBgImg, 0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(removedBgImg, 0, 0, width, height);
                     triggerDownload();
                 };
                 removedBgImg.src = removedBgImageUrl;
@@ -198,13 +219,16 @@ const Page = () => {
                     accept=".jpg, .jpeg, .png"
                 />
 
-                <Button
+                {/* <Button
                     onClick={handleUploadImage}
                     data-umami-event="Upload Image Nav"
                     data-umami-event-type="action"
                 >
                     How to use
-                </Button>
+                </Button> */}
+                <Link href="/" className='text-lg font-semibold'>
+                    Text Behind Image
+                </Link>
 
                 <div className='flex flex-row gap-4 items-center'>
                     {user && (
@@ -245,10 +269,11 @@ const Page = () => {
                                         transform: `translate(-50%, -50%) rotate(${textSet.rotation}deg)`,
                                         color: textSet.color,
                                         textAlign: 'center',
-                                        fontSize: `${textSet.fontSize}px`,
+                                        fontSize: `${textSet.fontSize * 0.1}vw`,
                                         fontWeight: textSet.fontWeight,
                                         fontFamily: textSet.fontFamily,
-                                        opacity: textSet.opacity
+                                        opacity: textSet.opacity,
+                                        userSelect: 'none'
                                     }}
                                 >
                                     {textSet.text}
