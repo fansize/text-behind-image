@@ -28,12 +28,12 @@ export default function Footer() {
                         GPT4oo
                     </Link>
                     <Link
-                        href="https://hao.logosc.cn/?utm_source=textbehindimage.site"
+                        href="https://www.logoai.com/?utm_source=textbehindimage.site"
                         className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        神器集
+                        AI Logo Maker
                     </Link>
                 </div>
             </div>
