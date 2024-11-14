@@ -1,8 +1,8 @@
+import "./globals.css";
 import type { Metadata } from "next";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Inter } from 'next/font/google'
-import "./globals.css";
 import SupabaseProvider from "@/providers/SupabaseProvider";
 import UserProvider from "@/providers/UserProvider";
 import { Toaster } from "@/components/ui/toaster"
@@ -15,10 +15,16 @@ export const metadata: Metadata = {
   title: "Text Behind Image | Free Online Image Text Overlay Tool",
   description: "Create professional text overlays on images easily. Perfect for Google Slides, presentations, social media posts, and graphic design. Free online tool for putting text behind or in front of images.",
   keywords: "text behind image, image text overlay, Google Slides text overlay, image editing tool, text on images, graphic design tool",
+  icons: {
+    icon: [
+      { url: '/icon.png', sizes: '512x512', type: 'image/png' }
+    ],
+  },
   openGraph: {
     title: "Text Behind Image | Free Online Image Text Overlay Tool",
     description: "Create professional text overlays on images easily. Perfect for Google Slides, presentations, social media posts, and graphic design.",
     type: "website",
+    url: "https://textbehindimage.site",
     locale: "en_US",
     images: [
       {
@@ -32,6 +38,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Text Behind Image | Free Online Image Text Overlay Tool",
+    site: "https://textbehindimage.site",
     description: "Create professional text overlays on images easily. Perfect for Google Slides, presentations, and graphic design.",
   },
   alternates: {

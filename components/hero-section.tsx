@@ -20,7 +20,11 @@ export const HeroSection = () => {
                         data-umami-event-type="navigation"
                         data-umami-event-location="home_hero"
                     >
-                        <Link href="/app">
+                        <Link
+                            href="/app"
+                            title="Start using our free online tool"
+                            aria-label="Start creating text behind image effects with our online editor"
+                        >
                             Start Now
                         </Link>
                     </Button>

@@ -32,6 +32,7 @@ export const ParallaxScroll = ({
       className={cn("h-full items-start overflow-y-auto w-full", className)}
       ref={gridRef}
     >
+      <h2 className="sr-only">Text Behind Image Use Cases and Examples - See How Others Create Amazing Text Overlay Effects</h2>
       <div
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-7xl items-start justify-start mx-auto gap-10 pt-20 px-10"
         ref={gridRef}
@@ -47,7 +48,7 @@ export const ParallaxScroll = ({
                 className="w-full object-cover object-left-top rounded-lg gap-10 !m-0 !p-0"
                 width={400}
                 height={400}
-                alt="thumbnail"
+                alt="User created text overlay example"
               />
             </motion.div>
           ))}
@@ -60,7 +61,7 @@ export const ParallaxScroll = ({
                 className="w-full object-cover object-left-top rounded-lg gap-10 !m-0 !p-0"
                 width={400}
                 height={400}
-                alt="thumbnail"
+                alt="User created text overlay example"
               />
             </motion.div>
           ))}
@@ -73,7 +74,7 @@ export const ParallaxScroll = ({
                 className="w-full object-cover object-left-top rounded-lg gap-10 !m-0 !p-0"
                 width={400}
                 height={400}
-                alt="thumbnail"
+                alt="User created text overlay example"
               />
             </motion.div>
           ))}
