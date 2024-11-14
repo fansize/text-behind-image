@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useRef } from 'react';
 
 interface UploadPromptProps {
-    onImageSelect: (imageUrl: string) => void;
+    onImageSelect: (imageUrl: string, removedBgUrl?: string) => void;
 }
 
 const STRINGS = {
@@ -15,16 +15,28 @@ const STRINGS = {
     templateSection: 'Or Choose a Template',
     useTemplate: 'Use This Template',
     templates: [
-        { id: 1, name: 'Template 1' },
-        { id: 2, name: 'Template 2' },
-        { id: 3, name: 'Template 3' },
+        {
+            id: 1,
+            name: 'template1',
+            originalUrl: '/templates/template1.jpg',
+            removedBgUrl: '/templates/template1-nobg.png'
+        },
+        {
+            id: 2,
+            name: 'template2',
+            originalUrl: '/templates/template2.png',
+            removedBgUrl: '/templates/template2-nobg.png'
+        },
+        {
+            id: 3,
+            name: 'template3',
+            originalUrl: '/templates/template3.jpg',
+            removedBgUrl: '/templates/template3-nobg.png'
+        },
     ]
 } as const;
 
-const defaultTemplates = STRINGS.templates.map(template => ({
-    ...template,
-    url: '/templates/template1.jpg'
-}));
+const defaultTemplates = STRINGS.templates;
 
 const UploadPrompt = ({ onImageSelect }: UploadPromptProps) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -74,11 +86,11 @@ const UploadPrompt = ({ onImageSelect }: UploadPromptProps) => {
                         <div
                             key={template.id}
                             className="relative group cursor-pointer"
-                            onClick={() => onImageSelect(template.url)}
+                            onClick={() => onImageSelect(template.originalUrl, template.removedBgUrl)}
                         >
                             <div className="relative w-[200px] h-[150px] overflow-hidden rounded-lg">
                                 <Image
-                                    src={template.url}
+                                    src={template.originalUrl}
                                     alt={template.name}
                                     fill
                                     className="object-cover transition-transform group-hover:scale-105"

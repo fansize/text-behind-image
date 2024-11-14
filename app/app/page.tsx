@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import Authenticate from '@/components/authenticate';
 import { Button } from '@/components/ui/button';
 import { removeBackground } from "@imgly/background-removal";
-import { PlusIcon, ReloadIcon } from '@radix-ui/react-icons';
+import { PlusIcon, ReloadIcon, DownloadIcon, UploadIcon } from '@radix-ui/react-icons';
 import TextCustomizer from '@/components/editor/text-customizer';
 import Image from 'next/image';
 import { Accordion } from '@/components/ui/accordion';
@@ -27,9 +27,19 @@ const Page = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     // 处理图片选择
-    const handleImageSelect = async (imageUrl: string) => {
+    const handleImageSelect = async (imageUrl: string, removedBgUrl?: string) => {
         setSelectedImage(imageUrl);
-        await setupImage(imageUrl);
+        if (removedBgUrl) {
+            // 如果是模板图片，直接使用预处理的无背景版本
+            const response = await fetch(removedBgUrl);
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            setRemovedBgImageUrl(url);
+            setIsImageSetupDone(true);
+        } else {
+            // 如果是用户上传的图片，使用removeBackground处理
+            await setupImage(imageUrl);
+        }
     };
 
     // 处理上传图片
@@ -49,10 +59,23 @@ const Page = () => {
         }
     };
 
+    // 保存 Blob 文件
+    const saveBlob = (blob: Blob, fileName: string) => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    };
+
     // 处理图片，用removeBackground去除背景
     const setupImage = async (imageUrl: string) => {
         try {
             const imageBlob = await removeBackground(imageUrl);
+
+            // 保存处理后的图片, 用于生成，上线时注释掉
+            saveBlob(imageBlob, 'processed-image.png');
+
             const url = URL.createObjectURL(imageBlob);
             setRemovedBgImageUrl(url);
             setIsImageSetupDone(true);
@@ -155,6 +178,15 @@ const Page = () => {
         }
     };
 
+    // 添加重置状态的函数
+    const handleReupload = () => {
+        setSelectedImage(null);
+        setIsImageSetupDone(false);
+        setRemovedBgImageUrl(null);
+        setTextSets([]);
+        handleUploadImage();
+    };
+
     return (
         <div className='flex flex-col min-h-screen'>
             <div className='flex flex-row items-center justify-between p-5 px-5 md:px-10'>
@@ -171,7 +203,7 @@ const Page = () => {
                     data-umami-event="Upload Image Nav"
                     data-umami-event-type="action"
                 >
-                    Upload image
+                    How to use
                 </Button>
 
                 <div className='flex flex-row gap-4 items-center'>
@@ -189,49 +221,80 @@ const Page = () => {
 
             {selectedImage ? (
                 <div className='flex flex-col md:flex-row items-start justify-start gap-10 w-full h-screen p-5 md:p-10'>
-                    <div className="min-h-[400px] w-full p-4 border rounded-lg relative overflow-hidden">
-                        {isImageSetupDone ? (
-                            <Image
-                                src={selectedImage}
-                                alt="Uploaded"
-                                layout="fill"
-                                objectFit="contain"
-                                objectPosition="center"
-                            />
-                        ) : (
-                            <span className='flex items-center w-full gap-2'><ReloadIcon className='animate-spin' /> Loading Image ...</span>
-                        )}
-                        {isImageSetupDone && textSets.map(textSet => (
-                            <div
-                                key={textSet.id}
-                                style={{
-                                    position: 'absolute',
-                                    top: `${50 - textSet.top}%`,
-                                    left: `${textSet.left + 50}%`,
-                                    transform: `translate(-50%, -50%) rotate(${textSet.rotation}deg)`,
-                                    color: textSet.color,
-                                    textAlign: 'center',
-                                    fontSize: `${textSet.fontSize}px`,
-                                    fontWeight: textSet.fontWeight,
-                                    fontFamily: textSet.fontFamily,
-                                    opacity: textSet.opacity
-                                }}
+                    {/* 图片效果展示区 */}
+                    <div className='flex flex-col w-full gap-4'>
+                        <div className="min-h-[400px] w-full p-4 border rounded-lg relative overflow-hidden">
+                            {isImageSetupDone ? (
+                                <Image
+                                    src={selectedImage}
+                                    alt="Uploaded"
+                                    layout="fill"
+                                    objectFit="contain"
+                                    objectPosition="center"
+                                />
+                            ) : (
+                                <span className='flex items-center w-full gap-2'><ReloadIcon className='animate-spin' /> Loading Image ...</span>
+                            )}
+                            {isImageSetupDone && textSets.map(textSet => (
+                                <div
+                                    key={textSet.id}
+                                    style={{
+                                        position: 'absolute',
+                                        top: `${50 - textSet.top}%`,
+                                        left: `${textSet.left + 50}%`,
+                                        transform: `translate(-50%, -50%) rotate(${textSet.rotation}deg)`,
+                                        color: textSet.color,
+                                        textAlign: 'center',
+                                        fontSize: `${textSet.fontSize}px`,
+                                        fontWeight: textSet.fontWeight,
+                                        fontFamily: textSet.fontFamily,
+                                        opacity: textSet.opacity
+                                    }}
+                                >
+                                    {textSet.text}
+                                </div>
+                            ))}
+                            {removedBgImageUrl && (
+                                <Image
+                                    src={removedBgImageUrl}
+                                    alt="Removed bg"
+                                    layout="fill"
+                                    objectFit="contain"
+                                    objectPosition="center"
+                                    className="absolute top-0 left-0 w-full h-full"
+                                />
+                            )}
+                        </div>
+
+                        <canvas ref={canvasRef} style={{ display: 'none' }} />
+
+                        <div className='flex flex-row justify-center gap-4'>
+                            <Button
+                                onClick={handleReupload}
+                                variant={'outline'}
+                                className='mb-8'
+                                data-umami-event="Reupload Image"
+                                data-umami-event-type="action"
                             >
-                                {textSet.text}
-                            </div>
-                        ))}
-                        {removedBgImageUrl && (
-                            <Image
-                                src={removedBgImageUrl}
-                                alt="Removed bg"
-                                layout="fill"
-                                objectFit="contain"
-                                objectPosition="center"
-                                className="absolute top-0 left-0 w-full h-full"
-                            />
-                        )}
+                                <UploadIcon className='mr-2' />
+                                Reupload
+                            </Button>
+
+                            <Button
+                                onClick={saveCompositeImage}
+                                variant={'outline'}
+                                className='mb-8'
+                                data-umami-event="Save Image"
+                                data-umami-event-type="action"
+                                data-umami-event-text_count={textSets.length.toString()}
+                            >
+                                <DownloadIcon className='mr-2' />
+                                Save Image
+                            </Button>
+                        </div>
                     </div>
 
+                    {/* 文本编辑区 */}
                     <div className='flex flex-col w-full'>
                         <Button variant={'secondary'} onClick={addNewTextSet}><PlusIcon className='mr-2' />Add New Text</Button>
                         <Accordion type="single" collapsible className="w-full mt-2">
@@ -245,18 +308,6 @@ const Page = () => {
                                 />
                             ))}
                         </Accordion>
-
-                        <canvas ref={canvasRef} style={{ display: 'none' }} />
-
-                        <Button
-                            onClick={saveCompositeImage}
-                            className='mb-8'
-                            data-umami-event="Save Image"
-                            data-umami-event-type="action"
-                            data-umami-event-text_count={textSets.length.toString()}
-                        >
-                            Save image
-                        </Button>
                     </div>
                 </div>
             ) : (
