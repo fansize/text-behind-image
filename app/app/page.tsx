@@ -17,6 +17,61 @@ import '@/app/fonts.css'
 import { ModeToggle } from '@/components/mode-toggle';
 import UploadPrompt from './upload-prompt';
 
+const STRINGS = {
+    nav: {
+        title: "Text Behind Image",
+        upload: "How to use"
+    },
+    buttons: {
+        reupload: "Reupload",
+        save: "Save Image",
+        addText: "Add Text",
+        remove: "Remove",
+        duplicate: "Duplicate"
+    },
+    loading: "Processing image...",
+    defaultText: "OHHH!",
+    downloadFileName: "text-behind-image.png",
+    analytics: {
+        uploadImage: {
+            event: "Upload Image",
+            type: "action"
+        },
+        reuploadImage: {
+            event: "Reupload Image",
+            type: "action"
+        },
+        saveImage: {
+            event: "Save Image",
+            type: "action"
+        },
+        addText: {
+            event: "Add Text Layer",
+            type: "action"
+        },
+        removeText: {
+            event: "Remove Text Layer",
+            type: "action"
+        },
+        duplicateText: {
+            event: "Duplicate Text Layer",
+            type: "action"
+        }
+    },
+    defaults: {
+        text: {
+            fontFamily: 'Inter',
+            color: '#FCB900',
+            fontSize: 150,
+            fontWeight: 800,
+            opacity: 1,
+            shadowColor: 'rgba(0, 0, 0, 0.8)',
+            shadowSize: 4,
+            rotation: 0
+        }
+    }
+} as const;
+
 const Page = () => {
     const { user } = useUser();
     const { session } = useSessionContext();
@@ -94,17 +149,17 @@ const Page = () => {
         const newId = Math.max(...textSets.map(set => set.id), 0) + 1;
         setTextSets(prev => [...prev, {
             id: newId,
-            text: 'OHHH!',
-            fontFamily: 'Inter',
+            text: STRINGS.defaultText,
+            fontFamily: STRINGS.defaults.text.fontFamily,
             top: 20,
             left: 0,
-            color: '#FCB900',
-            fontSize: 150,
-            fontWeight: 800,
-            opacity: 1,
-            shadowColor: 'rgba(0, 0, 0, 0.8)',
-            shadowSize: 4,
-            rotation: 0
+            color: STRINGS.defaults.text.color,
+            fontSize: STRINGS.defaults.text.fontSize,
+            fontWeight: STRINGS.defaults.text.fontWeight,
+            opacity: STRINGS.defaults.text.opacity,
+            shadowColor: STRINGS.defaults.text.shadowColor,
+            shadowSize: STRINGS.defaults.text.shadowSize,
+            rotation: STRINGS.defaults.text.rotation
         }]);
     };
 
@@ -193,7 +248,7 @@ const Page = () => {
         function triggerDownload() {
             const dataUrl = canvas.toDataURL('image/png');
             const link = document.createElement('a');
-            link.download = 'text-behind-image.png';
+            link.download = STRINGS.downloadFileName;
             link.href = dataUrl;
             link.click();
         }
@@ -219,15 +274,8 @@ const Page = () => {
                     accept=".jpg, .jpeg, .png"
                 />
 
-                {/* <Button
-                    onClick={handleUploadImage}
-                    data-umami-event="Upload Image Nav"
-                    data-umami-event-type="action"
-                >
-                    How to use
-                </Button> */}
                 <Link href="/" className='text-lg font-semibold'>
-                    Text Behind Image
+                    {STRINGS.nav.title}
                 </Link>
 
                 <div className='flex flex-row gap-4 items-center'>
@@ -257,7 +305,7 @@ const Page = () => {
                                     objectPosition="center"
                                 />
                             ) : (
-                                <span className='flex items-center w-full gap-2'><ReloadIcon className='animate-spin' /> Loading Image ...</span>
+                                <span className='flex items-center w-full gap-2'><ReloadIcon className='animate-spin' /> {STRINGS.loading}</span>
                             )}
                             {isImageSetupDone && textSets.map(textSet => (
                                 <div
@@ -298,30 +346,38 @@ const Page = () => {
                                 onClick={handleReupload}
                                 variant={'outline'}
                                 className='mb-8'
-                                data-umami-event="Reupload Image"
-                                data-umami-event-type="action"
+                                data-umami-event={STRINGS.analytics.reuploadImage.event}
+                                data-umami-event-type={STRINGS.analytics.reuploadImage.type}
                             >
                                 <UploadIcon className='mr-2' />
-                                Reupload
+                                {STRINGS.buttons.reupload}
                             </Button>
 
                             <Button
                                 onClick={saveCompositeImage}
                                 variant={'outline'}
                                 className='mb-8'
-                                data-umami-event="Save Image"
-                                data-umami-event-type="action"
+                                data-umami-event={STRINGS.analytics.saveImage.event}
+                                data-umami-event-type={STRINGS.analytics.saveImage.type}
                                 data-umami-event-text_count={textSets.length.toString()}
                             >
                                 <DownloadIcon className='mr-2' />
-                                Save Image
+                                {STRINGS.buttons.save}
                             </Button>
                         </div>
                     </div>
 
                     {/* 文本编辑区 */}
                     <div className='flex flex-col w-full'>
-                        <Button variant={'secondary'} onClick={addNewTextSet}><PlusIcon className='mr-2' />Add New Text</Button>
+                        <Button
+                            variant={'secondary'}
+                            onClick={addNewTextSet}
+                            data-umami-event={STRINGS.analytics.addText.event}
+                            data-umami-event-type={STRINGS.analytics.addText.type}
+                        >
+                            <PlusIcon className='mr-2' />
+                            {STRINGS.buttons.addText}
+                        </Button>
                         <Accordion type="single" collapsible className="w-full mt-2">
                             {textSets.map(textSet => (
                                 <TextCustomizer

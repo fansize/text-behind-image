@@ -34,7 +34,18 @@ const STRINGS = {
             originalUrl: '/templates/template3.png',
             removedBgUrl: '/templates/template3-nobg.png'
         },
-    ]
+    ],
+    analytics: {
+        uploadButton: {
+            event: "Upload Image Click",
+            type: "action",
+            source: "main"
+        },
+        templateButton: {
+            event: "Template Select",
+            type: "action"
+        }
+    }
 } as const;
 
 const defaultTemplates = STRINGS.templates;
@@ -72,8 +83,9 @@ const UploadPrompt = ({ onImageSelect }: UploadPromptProps) => {
 
             <Button
                 onClick={handleUploadImage}
-                data-umami-event="Upload Image Main"
-                data-umami-event-type="action"
+                data-umami-event={STRINGS.analytics.uploadButton.event}
+                data-umami-event-type={STRINGS.analytics.uploadButton.type}
+                data-umami-event-source={STRINGS.analytics.uploadButton.source}
                 size="lg"
             >
                 <UploadIcon className='mr-2' />
@@ -87,7 +99,13 @@ const UploadPrompt = ({ onImageSelect }: UploadPromptProps) => {
                         <div
                             key={template.id}
                             className="relative group cursor-pointer"
-                            onClick={() => onImageSelect(template.originalUrl, template.removedBgUrl)}
+                            onClick={() => {
+                                onImageSelect(template.originalUrl, template.removedBgUrl);
+                            }}
+                            data-umami-event={STRINGS.analytics.templateButton.event}
+                            data-umami-event-type={STRINGS.analytics.templateButton.type}
+                            data-umami-event-template={template.name}
+                            data-umami-event-template-id={template.id.toString()}
                         >
                             <div className="relative w-[400px] h-[250px] overflow-hidden rounded-lg">
                                 <Image
