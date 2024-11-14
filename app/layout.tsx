@@ -22,9 +22,9 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [
       {
-        url: "/og-image.jpg", // 建议添加一个实际的 OG 图片
-        width: 1200,
-        height: 630,
+        url: "/og-image.png",
+        width: 1600,
+        height: 837,
         alt: "Text Behind Image Tool Preview",
       },
     ],
@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Text Behind Image | Free Online Image Text Overlay Tool",
     description: "Create professional text overlays on images easily. Perfect for Google Slides, presentations, and graphic design.",
+  },
+  alternates: {
+    canonical: 'https://textbehindimage.site',
   },
 };
 

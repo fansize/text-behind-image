@@ -33,7 +33,7 @@ export const HeroSection = () => {
                     secondImage="/hero/before.png"
                     firstImageClassName="object-cover object-left-top"
                     secondImageClassname="object-cover object-left-top"
-                    className="w-full h-[350px] md:w-[500px] md:h-[500px]"
+                    className="w-full h-[350px] md:w-[500px] md:h-[400px]"
                     slideMode="hover"
                 />
             </div>
