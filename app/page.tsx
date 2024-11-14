@@ -4,6 +4,7 @@ import React from 'react';
 import { HeroParallaxImages } from '@/components/hero-parallax-images';
 import { HeroSection } from '@/components/hero-section';
 import { FAQ } from '@/components/faq';
+import Footer from '@/components/footer';
 
 const page = () => {
     return (
@@ -11,6 +12,7 @@ const page = () => {
             <HeroSection />
             <HeroParallaxImages />
             <FAQ />
+            <Footer />
         </div>
     );
 }
