@@ -1,4 +1,3 @@
-// app/app/page.tsx
 'use client'
 
 import React, { useRef, useState } from 'react';
@@ -15,6 +14,7 @@ import Image from 'next/image';
 import { Accordion } from '@/components/ui/accordion';
 import '@/app/fonts.css'
 import { ModeToggle } from '@/components/mode-toggle';
+import UploadPrompt from './upload-prompt';
 
 const Page = () => {
     const { user } = useUser();
@@ -26,12 +26,20 @@ const Page = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
+    // 处理图片选择
+    const handleImageSelect = async (imageUrl: string) => {
+        setSelectedImage(imageUrl);
+        await setupImage(imageUrl);
+    };
+
+    // 处理上传图片
     const handleUploadImage = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click();
         }
     };
 
+    // 处理文件变化
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
@@ -41,6 +49,7 @@ const Page = () => {
         }
     };
 
+    // 处理图片，用removeBackground去除背景
     const setupImage = async (imageUrl: string) => {
         try {
             const imageBlob = await removeBackground(imageUrl);
@@ -52,6 +61,7 @@ const Page = () => {
         }
     };
 
+    // 添加新的文本层
     const addNewTextSet = () => {
         const newId = Math.max(...textSets.map(set => set.id), 0) + 1;
         setTextSets(prev => [...prev, {
@@ -60,7 +70,7 @@ const Page = () => {
             fontFamily: 'Inter',
             top: 20,
             left: 0,
-            color: 'white',
+            color: '#FCB900',
             fontSize: 150,
             fontWeight: 800,
             opacity: 1,
@@ -70,21 +80,25 @@ const Page = () => {
         }]);
     };
 
+    // 处理文本层属性变化
     const handleAttributeChange = (id: number, attribute: string, value: any) => {
         setTextSets(prev => prev.map(set =>
             set.id === id ? { ...set, [attribute]: value } : set
         ));
     };
 
+    // 复制文本层
     const duplicateTextSet = (textSet: any) => {
         const newId = Math.max(...textSets.map(set => set.id), 0) + 1;
         setTextSets(prev => [...prev, { ...textSet, id: newId }]);
     };
 
+    // 删除文本层
     const removeTextSet = (id: number) => {
         setTextSets(prev => prev.filter(set => set.id !== id));
     };
 
+    // 保存合成图片
     const saveCompositeImage = () => {
         if (!canvasRef.current || !isImageSetupDone) return;
 
@@ -246,16 +260,7 @@ const Page = () => {
                     </div>
                 </div>
             ) : (
-                <div className='flex flex-col items-center justify-center min-h-[80vh] w-full gap-4'>
-                    <h2 className="text-xl font-semibold">Welcome, get started by uploading an image!</h2>
-                    <Button
-                        onClick={handleUploadImage}
-                        data-umami-event="Upload Image Main"
-                        data-umami-event-type="action"
-                    >
-                        Upload image
-                    </Button>
-                </div>
+                <UploadPrompt onImageSelect={handleImageSelect} />
             )}
         </div>
     );
