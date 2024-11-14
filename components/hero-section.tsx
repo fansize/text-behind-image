@@ -16,7 +16,7 @@ export const HeroSection = () => {
                     <Button
                         size="lg"
                         className="w-full sm:w-auto" asChild
-                        data-umami-event="Open App Click"
+                        data-umami-event="Click Start Button"
                         data-umami-event-type="navigation"
                         data-umami-event-location="home_hero"
                     >
@@ -37,7 +37,7 @@ export const HeroSection = () => {
                     secondImage="/hero/before.png"
                     firstImageClassName="object-cover object-left-top"
                     secondImageClassname="object-cover object-left-top"
-                    className="w-full h-[350px] md:w-[500px] md:h-[400px]"
+                    className="w-full h-[350px] md:w-[600px] md:h-[400px]"
                     slideMode="hover"
                 />
             </div>

@@ -37,7 +37,7 @@ const STRINGS = {
     ],
     analytics: {
         uploadButton: {
-            event: "Upload Image Click",
+            event: "Click Upload Image Button",
             type: "action",
             source: "main"
         },
@@ -107,7 +107,7 @@ const UploadPrompt = ({ onImageSelect }: UploadPromptProps) => {
                             data-umami-event-template={template.name}
                             data-umami-event-template-id={template.id.toString()}
                         >
-                            <div className="relative w-[400px] h-[250px] overflow-hidden rounded-lg">
+                            <div className="relative w-[350px] md:w-[400px] h-[250px] overflow-hidden rounded-lg p-2">
                                 <Image
                                     src={template.originalUrl}
                                     alt={template.name}
