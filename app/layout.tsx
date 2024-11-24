@@ -65,7 +65,6 @@ export default function RootLayout({
               <div>
                 {children}
                 <Toaster />
-                <Analytics />
                 <SpeedInsights />
                 <Script
                   src="https://umami-selfhost-dusky.vercel.app/script.js"

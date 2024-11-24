@@ -18,7 +18,7 @@ export default function Footer() {
                 </div>
 
                 <div className="mb-8 flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400 items-center">
-                    <span>Partners:</span>
+                    <span>More Tools</span>
                     <Link
                         href="https://gpt4oo.com/?utm_source=textbehindimage.site"
                         className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
@@ -28,12 +28,20 @@ export default function Footer() {
                         GPT4oo
                     </Link>
                     <Link
-                        href="https://www.logoai.com/?utm_source=textbehindimage.site"
+                        href="https://tiny-pics.vercel.app/?utm_source=textbehindimage.site"
                         className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        AI Logo Maker
+                        Tiny Pictures
+                    </Link>
+                    <Link
+                        href="https://aescaneado.site/?utm_source=textbehindimage.site"
+                        className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Look Scanned
                     </Link>
                 </div>
             </div>
