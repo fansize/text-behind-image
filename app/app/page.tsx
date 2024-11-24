@@ -15,7 +15,8 @@ import Image from 'next/image';
 import { Accordion } from '@/components/ui/accordion';
 import '@/app/fonts.css'
 import { ModeToggle } from '@/components/mode-toggle';
-import UploadPrompt from './upload-prompt';
+import UploadPrompt from './_components/upload-prompt';
+import { ActionPanels } from './_components/action-panels';
 
 const STRINGS = {
     nav: {
@@ -341,7 +342,7 @@ const Page = () => {
 
                         <canvas ref={canvasRef} style={{ display: 'none' }} />
 
-                        <div className='flex flex-row justify-center gap-4'>
+                        {/* <div className='flex flex-row justify-center gap-4'>
                             <Button
                                 onClick={handleReupload}
                                 variant={'outline'}
@@ -364,7 +365,9 @@ const Page = () => {
                                 <DownloadIcon className='mr-2' />
                                 {STRINGS.buttons.save}
                             </Button>
-                        </div>
+                        </div> */}
+
+                        <ActionPanels onDownload={saveCompositeImage} />
                     </div>
 
                     {/* 文本编辑区 */}
