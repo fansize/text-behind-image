@@ -135,7 +135,7 @@ const Page = () => {
             const imageBlob = await removeBackground(imageUrl);
 
             // 保存处理后的图片, 用于生成，上线时注释掉
-            saveBlob(imageBlob, 'processed-image.png');
+            // saveBlob(imageBlob, 'processed-image.png');
 
             const url = URL.createObjectURL(imageBlob);
             setRemovedBgImageUrl(url);
