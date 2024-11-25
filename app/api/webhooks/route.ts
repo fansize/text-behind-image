@@ -32,18 +32,18 @@ export async function POST(req: Request) {
                 const session = event.data.object as Stripe.Checkout.Session;
 
                 // 更新用户的订阅状态
-                const { error } = await supabase
-                    .from('users')
-                    .update({
-                        stripe_customer_id: session.customer as string,
-                        subscription_status: 'active',
-                        subscription_price_id: session.metadata?.priceId,
-                        // 记录更新时间
-                        updated_at: new Date().toISOString()
-                    })
-                    .eq('id', session.metadata?.userId);
+                // const { error } = await supabase
+                //     .from('users')
+                //     .update({
+                //         stripe_customer_id: session.customer as string,
+                //         subscription_status: 'active',
+                //         subscription_price_id: session.metadata?.priceId,
+                //         // 记录更新时间
+                //         updated_at: new Date().toISOString()
+                //     })
+                //     .eq('id', session.metadata?.userId);
 
-                if (error) throw error;
+                // if (error) throw error;
 
                 // 可以在这里添加其他逻辑，如：
                 // - 发送欢迎邮件
@@ -60,17 +60,17 @@ export async function POST(req: Request) {
                 const priceId = subscription.items.data[0].price.id;
 
                 // 更新订阅状态
-                const { error } = await supabase
-                    .from('users')
-                    .update({
-                        subscription_status: subscription.status,
-                        subscription_price_id: priceId,
-                        subscription_end_date: new Date(subscription.current_period_end * 1000),
-                        updated_at: new Date().toISOString()
-                    })
-                    .eq('stripe_customer_id', subscription.customer as string);
+                // const { error } = await supabase
+                //     .from('users')
+                //     .update({
+                //         subscription_status: subscription.status,
+                //         subscription_price_id: priceId,
+                //         subscription_end_date: new Date(subscription.current_period_end * 1000),
+                //         updated_at: new Date().toISOString()
+                //     })
+                //     .eq('stripe_customer_id', subscription.customer as string);
 
-                if (error) throw error;
+                // if (error) throw error;
                 break;
             }
 
@@ -79,16 +79,16 @@ export async function POST(req: Request) {
                 const subscription = event.data.object as Stripe.Subscription;
 
                 // 更新用户状态为已取消
-                const { error } = await supabase
-                    .from('users')
-                    .update({
-                        subscription_status: 'canceled',
-                        subscription_end_date: new Date(subscription.current_period_end * 1000),
-                        updated_at: new Date().toISOString()
-                    })
-                    .eq('stripe_customer_id', subscription.customer as string);
+                // const { error } = await supabase
+                //     .from('users')
+                //     .update({
+                //         subscription_status: 'canceled',
+                //         subscription_end_date: new Date(subscription.current_period_end * 1000),
+                //         updated_at: new Date().toISOString()
+                //     })
+                //     .eq('stripe_customer_id', subscription.customer as string);
 
-                if (error) throw error;
+                // if (error) throw error;
                 break;
             }
 
