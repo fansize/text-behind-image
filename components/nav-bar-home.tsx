@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 
 export default function Nav() {
     return (
-        <nav className="fixed top-0 left-0 right-0 flex items-center justify-between px-10 md:px-20 py-4 border-b bg-white/80 backdrop-blur-md z-50 transition-all duration-300">
+        <nav className="fixed top-0 left-0 right-0 flex items-center justify-between px-10 md:px-10 py-4 border-b bg-white/80 backdrop-blur-md z-50 transition-all duration-300">
             <Link href="/" className="text-xl font-bold">
                 TextBehindImage
             </Link>
