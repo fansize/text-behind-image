@@ -1,13 +1,12 @@
-import EditorPage from './_components/editor-page';
 import { createClient } from '@/utils/supabase/server';
 import {
     getProducts,
     getSubscription,
     getUser
 } from '@/utils/supabase/queries';
-import NavBar from '@/components/nav';
+import NavBarClient from './nav-bar';
 
-export default async function Page() {
+export default async function NavBar() {
     const supabase = createClient();
     const [user, products, subscription] = await Promise.all([
         getUser(supabase),
@@ -15,13 +14,11 @@ export default async function Page() {
         getSubscription(supabase)
     ]);
 
-    const isProActive = subscription?.status === 'active' &&
-        subscription?.prices?.products?.name === 'Pro';
-
     return (
-        <div>
-            <NavBar />
-            <EditorPage user={user} isProActive={isProActive} />
-        </div>
+        <NavBarClient
+            user={user}
+            products={products}
+            subscription={subscription}
+        />
     );
 }

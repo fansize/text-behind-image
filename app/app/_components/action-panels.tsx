@@ -133,13 +133,14 @@ export function ActionButtons({ onDownload }: ActionButtonsProps) {
 
 interface ActionPanelsProps {
     onDownload: () => void;
+    isProActive: boolean;
 }
 
 // 修改主组件接收并传递 onDownload
-export function ActionPanels({ onDownload }: ActionPanelsProps) {
+export function ActionPanels({ onDownload, isProActive }: ActionPanelsProps) {
     return (
         <>
-            <UpgradePanel />
+            {!isProActive && <UpgradePanel />}
             <ActionButtons onDownload={onDownload} />
         </>
     )
