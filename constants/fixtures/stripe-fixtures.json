@@ -1,0 +1,69 @@
+{
+  "_meta": {
+    "template_version": 0
+  },
+  "fixtures": [
+    {
+      "name": "prod_free",
+      "path": "/v1/products",
+      "method": "post",
+      "params": {
+        "name": "Free",
+        "description": "For personal use",
+        "metadata": {
+          "index": 0
+        }
+      }
+    },
+    {
+      "name": "prod_pro",
+      "path": "/v1/products",
+      "method": "post",
+      "params": {
+        "name": "Pro",
+        "description": "For professional use",
+        "metadata": {
+          "index": 1
+        }
+      }
+    },
+    {
+      "name": "price_pro_month",
+      "path": "/v1/prices",
+      "method": "post",
+      "params": {
+        "product": "${prod_pro:id}",
+        "currency": "usd",
+        "billing_scheme": "per_unit",
+        "unit_amount": 1200,
+        "recurring": {
+          "interval": "month",
+          "interval_count": 1
+        },
+        "metadata": {
+          "type": "pro",
+          "interval": "month"
+        }
+      }
+    },
+    {
+      "name": "price_pro_year",
+      "path": "/v1/prices",
+      "method": "post",
+      "params": {
+        "product": "${prod_pro:id}",
+        "currency": "usd",
+        "billing_scheme": "per_unit",
+        "unit_amount": 9900,
+        "recurring": {
+          "interval": "year",
+          "interval_count": 1
+        },
+        "metadata": {
+          "type": "pro",
+          "interval": "year"
+        }
+      }
+    }
+  ]
+}

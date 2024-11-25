@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "stripe:login": "stripe login",
+    "stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks"
   },
   "dependencies": {
     "@imgly/background-removal": "^1.5.5",
@@ -28,6 +30,8 @@
     "@stripe/stripe-js": "^5.2.0",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/auth-helpers-react": "^0.5.0",
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.46.1",
     "@tabler/icons-react": "^3.17.0",
     "@tsparticles/engine": "^3.5.0",
     "@tsparticles/react": "^3.0.0",

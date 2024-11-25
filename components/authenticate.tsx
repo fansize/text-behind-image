@@ -22,7 +22,9 @@ const Authenticate = ({ show = true, onClose }: AuthenticateProps) => {
           access_type: 'offline',
           prompt: 'consent',
         },
-        redirectTo: 'https://textbehindimage.site/app'
+        redirectTo: process.env.NODE_ENV === 'development'
+          ? 'http://localhost:3000/auth/callback'
+          : 'https://textbehindimage.site/auth/callback'
       },
     })
 

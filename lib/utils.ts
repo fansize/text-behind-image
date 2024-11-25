@@ -29,3 +29,7 @@ export function generateHash(input: string): string {
   // Take the first 8 characters
   return paddedHash.slice(0, 8);
 }
+
+export function absoluteUrl(path: string) {
+  return `${process.env.NEXT_PUBLIC_SITE_URL}${path}`;
+}
