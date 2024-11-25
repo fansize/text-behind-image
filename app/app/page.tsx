@@ -281,11 +281,15 @@ const Page = () => {
 
                 <div className='flex flex-row gap-4 items-center'>
                     {user && (
-                        <Avatar className='h-8 w-8'>
-                            <AvatarImage src={user?.user_metadata.avatar_url} />
-                        </Avatar>
+                        <>
+                            <span className="text-sm">
+                                {user.email || user.user_metadata.name}
+                            </span>
+                            <Avatar className='h-8 w-8'>
+                                <AvatarImage src={user?.user_metadata.avatar_url} />
+                            </Avatar>
+                        </>
                     )}
-
                     <ModeToggle />
                 </div>
             </div>
