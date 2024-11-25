@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Twitter } from "@/components/social-icons";
+import { Twitter } from "@/components/icons/social-icons";
 
 export default function Footer() {
     return (
