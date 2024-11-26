@@ -11,11 +11,13 @@ import {
 import { Card } from '@/components/ui/card';
 import PasswordSignIn from './_components/PasswordSignIn';
 import EmailSignIn from './_components/EmailSignIn';
-import Separator from './_components/Separator';
+// import Separator from './_components/Separator';
 import OauthSignIn from './_components/OauthSignIn';
 import ForgotPassword from './_components/ForgotPassword';
 import UpdatePassword from './_components/UpdatePassword';
 import SignUp from './_components/Signup';
+import Navbar from '@/components/nav';
+import { Separator } from '@/components/ui/separator';
 
 export default async function SignIn({
   params,
@@ -55,12 +57,11 @@ export default async function SignIn({
   }
 
   return (
-    <div className="flex justify-center height-screen-helper">
-      <div className="flex flex-col justify-between max-w-lg p-3 m-auto w-80 ">
-        <div className="flex justify-center pb-12 ">
-          <Logo width="64px" height="64px" />
-        </div>
+    <div className="flex flex-col justify-center height-screen-helper">
+      <Navbar />
+      <div className="flex flex-col justify-between mx-auto w-80 mt-12">
         <Card
+          className='p-4'
           title={
             viewProp === 'forgot_password'
               ? 'Reset Password'
@@ -71,6 +72,17 @@ export default async function SignIn({
                   : 'Sign In'
           }
         >
+          {/* 第三方登录 */}
+          {viewProp !== 'update_password' &&
+            viewProp !== 'signup' &&
+            allowOauth && (
+              <>
+                <OauthSignIn />
+                <Separator className='mt-8' />
+              </>
+            )}
+
+          {/* 邮箱密码登录 */}
           {viewProp === 'password_signin' && (
             <PasswordSignIn
               allowEmail={allowEmail}
@@ -97,14 +109,7 @@ export default async function SignIn({
           {viewProp === 'signup' && (
             <SignUp allowEmail={allowEmail} redirectMethod={redirectMethod} />
           )}
-          {viewProp !== 'update_password' &&
-            viewProp !== 'signup' &&
-            allowOauth && (
-              <>
-                <Separator text="Third-party sign-in" />
-                <OauthSignIn />
-              </>
-            )}
+
         </Card>
       </div>
     </div>

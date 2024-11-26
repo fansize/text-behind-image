@@ -3,7 +3,7 @@
 import Button from './Button';
 import { signInWithOAuth } from '@/utils/auth-helpers/client';
 import { type Provider } from '@supabase/supabase-js';
-import { Github } from 'lucide-react';
+import { FaGoogle, FaGithub } from 'react-icons/fa';
 import { useState } from 'react';
 
 type OAuthProviders = {
@@ -14,12 +14,16 @@ type OAuthProviders = {
 
 export default function OauthSignIn() {
   const oAuthProviders: OAuthProviders[] = [
+    // {
+    //   name: 'github',
+    //   displayName: 'GitHub',
+    //   icon: <FaGithub className="h-5 w-5" />
+    // },
     {
-      name: 'github',
-      displayName: 'GitHub',
-      icon: <Github className="h-5 w-5" />
+      name: 'google',
+      displayName: 'Google',
+      icon: <FaGoogle className="h-5 w-5" />
     }
-    /* Add desired OAuth providers here */
   ];
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -30,7 +34,7 @@ export default function OauthSignIn() {
   };
 
   return (
-    <div className="mt-8">
+    <div className="mt-4">
       {oAuthProviders.map((provider) => (
         <form
           key={provider.name}

@@ -27,14 +27,14 @@ export default function PasswordSignIn({
   };
 
   return (
-    <div className="my-8">
+    <div className="mt-8 mb-2">
       <form
         noValidate={true}
         className="mb-4"
         onSubmit={(e) => handleSubmit(e)}
       >
-        <div className="grid gap-2">
-          <div className="grid gap-1">
+        <div className="grid gap-4">
+          <div className="grid gap-2">
             <label htmlFor="email">Email</label>
             <input
               id="email"
@@ -44,7 +44,7 @@ export default function PasswordSignIn({
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
-              className="w-full p-3 rounded-md bg-zinc-800"
+              className="w-full p-3 rounded-md border border-zinc-400"
             />
             <label htmlFor="password">Password</label>
             <input
@@ -53,7 +53,7 @@ export default function PasswordSignIn({
               type="password"
               name="password"
               autoComplete="current-password"
-              className="w-full p-3 rounded-md bg-zinc-800"
+              className="w-full p-3 rounded-md border border-zinc-400"
             />
           </div>
           <Button
@@ -71,13 +71,13 @@ export default function PasswordSignIn({
           Forgot your password?
         </Link>
       </p>
-      {allowEmail && (
+      {/* {allowEmail && (
         <p>
           <Link href="/signin/email_signin" className="font-light text-sm">
             Sign in via magic link
           </Link>
         </p>
-      )}
+      )} */}
       <p>
         <Link href="/signin/signup" className="font-light text-sm">
           Don't have an account? Sign up

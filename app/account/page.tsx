@@ -10,7 +10,31 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
+import Link from 'next/link';
+
+// 添加 STRINGS 常量对象
+const STRINGS = {
+  TITLE: 'Account Settings',
+  SUBTITLE: 'Manage your personal information and subscription settings',
+  PERSONAL_INFO: {
+    TITLE: 'Personal Information',
+    DESCRIPTION: 'Update your personal profile information',
+    EMAIL: {
+      LABEL: 'Email',
+      HINT: 'Email address cannot be changed'
+    }
+  },
+  SUBSCRIPTION: {
+    TITLE: 'Subscription',
+    DESCRIPTION: 'Manage your subscription plan and payment method',
+    CURRENT_PLAN: 'Current Plan',
+    FREE_PLAN: 'Free',
+    SUBSCRIBED: 'Pro',
+    NEXT_BILLING: 'Next Billing Date',
+    MANAGE: 'Manage Subscription',
+    UPGRADE: 'Upgrade Plan'
+  }
+} as const;
 
 export default async function Account() {
   const supabase = createClient();
@@ -27,28 +51,24 @@ export default async function Account() {
   return (
     <section className="container mx-auto py-10">
       <div className="flex flex-col items-center justify-center space-y-4 text-center mb-10">
-        <h1 className="text-4xl font-bold tracking-tight">账户设置</h1>
+        <h1 className="text-4xl font-bold tracking-tight">{STRINGS.TITLE}</h1>
         <p className="text-muted-foreground text-lg">
-          管理您的个人信息和订阅设置
+          {STRINGS.SUBTITLE}
         </p>
       </div>
 
       <div className="space-y-6 max-w-2xl mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle>个人信息</CardTitle>
-            <CardDescription>更新您的个人资料信息</CardDescription>
+            <CardTitle>{STRINGS.PERSONAL_INFO.TITLE}</CardTitle>
+            <CardDescription>{STRINGS.PERSONAL_INFO.DESCRIPTION}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">姓名</Label>
-              <Input id="name" defaultValue={userDetails?.full_name ?? ''} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">电子邮箱</Label>
+              <Label htmlFor="email">{STRINGS.PERSONAL_INFO.EMAIL.LABEL}</Label>
               <Input id="email" type="email" defaultValue={user.email} disabled />
               <p className="text-sm text-muted-foreground">
-                邮箱地址不可更改
+                {STRINGS.PERSONAL_INFO.EMAIL.HINT}
               </p>
             </div>
           </CardContent>
@@ -56,25 +76,27 @@ export default async function Account() {
 
         <Card>
           <CardHeader>
-            <CardTitle>订阅信息</CardTitle>
-            <CardDescription>管理您的订阅计划和支付方式</CardDescription>
+            <CardTitle>{STRINGS.SUBSCRIPTION.TITLE}</CardTitle>
+            <CardDescription>{STRINGS.SUBSCRIPTION.DESCRIPTION}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="rounded-lg border p-4">
               <div className="space-y-2">
                 <p className="text-sm font-medium">
-                  当前方案: {subscription ? '已订阅' : '免费版'}
+                  {STRINGS.SUBSCRIPTION.CURRENT_PLAN}: {subscription ? STRINGS.SUBSCRIPTION.SUBSCRIBED : STRINGS.SUBSCRIPTION.FREE_PLAN}
                 </p>
                 {subscription && (
                   <p className="text-sm text-muted-foreground">
-                    下次续费日期: {new Date(subscription.current_period_end).toLocaleDateString()}
+                    {STRINGS.SUBSCRIPTION.NEXT_BILLING}: {new Date(subscription.current_period_end).toLocaleDateString()}
                   </p>
                 )}
               </div>
             </div>
-            <Button className="w-full">
-              {subscription ? '管理订阅' : '升级订阅'}
-            </Button>
+            <Link href="/pricing" className="w-full">
+              <Button className="w-full mt-4">
+                {subscription ? STRINGS.SUBSCRIPTION.MANAGE : STRINGS.SUBSCRIPTION.UPGRADE}
+              </Button>
+            </Link>
           </CardContent>
         </Card>
       </div>
