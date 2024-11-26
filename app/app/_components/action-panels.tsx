@@ -35,9 +35,15 @@ export function UpgradePanel() {
     return (
         <div className="flex items-center gap-2 rounded-lg border bg-card p-4 text-sm">
             <Lock className="h-4 w-4" />
-            <Link href="/pricing" className="font-medium hover:underline">
+            <Link
+                href="/pricing"
+                className="font-medium hover:underline"
+                data-umami-event="upgrade_link_click"
+                data-umami-event-type="pricing"
+            >
                 {STRINGS.upgrade.title}
-            </Link> {STRINGS.upgrade.description}
+            </Link>
+            {STRINGS.upgrade.description}
         </div>
     )
 }
@@ -56,7 +62,11 @@ export function SavePanel({ onDownload }: SavePanelProps) {
                     <p className="text-sm text-muted-foreground">{STRINGS.savePanel.description}</p>
                 </div>
 
-                <Button onClick={onDownload}>
+                <Button
+                    onClick={onDownload}
+                    data-umami-event="download_button_click"
+                    data-umami-event-type="action"
+                >
                     <ArrowDown className="mr-2 h-4 w-4" />
                     {STRINGS.savePanel.button}
                 </Button>
@@ -87,7 +97,11 @@ export function SaveHDPanel({ onDownload }: SavePanelProps) {
                         <p className="text-sm text-muted-foreground">{STRINGS.saveHDPanel.description}</p>
                     </div>
 
-                    <Button onClick={handleClick}>
+                    <Button
+                        onClick={handleClick}
+                        data-umami-event="download_hd_button_click"
+                        data-umami-event-type="action"
+                    >
                         <ArrowDown className="mr-2 h-4 w-4" />
                         {STRINGS.saveHDPanel.button}
                     </Button>

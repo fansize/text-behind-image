@@ -82,7 +82,11 @@ export default function NavBarClient({ user, products, subscription }) {
                     )
                 ) : (
                     <Link href="/signin">
-                        <Button className="bg-[#2A2B2A] text-white rounded-full hover:bg-[#2A2B2A]/90">
+                        <Button
+                            className="bg-[#2A2B2A] text-white rounded-full hover:bg-[#2A2B2A]/90"
+                            data-umami-event="login_button_click"
+                            data-umami-event-type="action"
+                        >
                             {STRINGS.login}
                         </Button>
                     </Link>

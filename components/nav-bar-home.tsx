@@ -9,7 +9,7 @@ export default function Nav() {
                 TextBehindImage
             </Link>
 
-            <div className="hidden md:flex items-center gap-8">
+            {/* <div className="hidden md:flex items-center gap-8">
                 <Link href="/community" className="text-sm font-medium">
                     Community
                 </Link>
@@ -22,7 +22,7 @@ export default function Nav() {
                     Pricing
                 </Link>
 
-            </div>
+            </div> */}
 
             <Link href="/app">
                 <Button className="bg-[#2A2B2A] text-white rounded-full hover:bg-[#2A2B2A]/90">
