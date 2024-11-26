@@ -5,6 +5,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { ArrowDown, Lock } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation';
 
 const STRINGS = {
     tabs: {
@@ -67,11 +68,11 @@ export function SavePanel({ onDownload }: SavePanelProps) {
 // 保存大图片
 export function SaveHDPanel({ onDownload }: SavePanelProps) {
     const { user } = useUser()
-    const [showAuthModal, setShowAuthModal] = useState(false)
+    const router = useRouter()
 
     const handleClick = () => {
         if (!user) {
-            setShowAuthModal(true)
+            router.push('/signin')
             return
         }
         onDownload()
@@ -93,10 +94,10 @@ export function SaveHDPanel({ onDownload }: SavePanelProps) {
                 </div>
             </div>
 
-            <Authenticate
-                show={showAuthModal}
-                onClose={() => setShowAuthModal(false)}
-            />
+            {/* <Authenticate
+                show={false}
+                onClose={() => { }}
+            /> */}
         </>
     )
 }

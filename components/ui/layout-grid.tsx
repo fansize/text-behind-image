@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/utils";
 import Image, { StaticImageData } from "next/image";
 
 type Card = {
@@ -37,8 +37,8 @@ export const LayoutGrid = ({ cards }: { cards: Card[] }) => {
               selected?.id === card.id
                 ? "rounded-lg cursor-pointer absolute inset-0 h-1/2 w-full md:w-1/2 m-auto z-50 flex justify-center items-center flex-wrap flex-col"
                 : lastSelected?.id === card.id
-                ? "z-40 bg-white rounded-xl h-full w-full"
-                : "bg-white rounded-xl h-full w-full"
+                  ? "z-40 bg-white rounded-xl h-full w-full"
+                  : "bg-white rounded-xl h-full w-full"
             )}
             layoutId={`card-${card.id}`}
           >
@@ -68,7 +68,7 @@ const ImageComponent = ({ card }: { card: Card }) => {
       width="500"
       className={cn(
         "object-cover object-top inset-0 h-full w-full transition duration-200",
-        "md:absolute" 
+        "md:absolute"
       )}
       alt="thumbnail"
     />
