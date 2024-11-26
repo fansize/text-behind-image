@@ -20,7 +20,7 @@ type CheckoutResponse = {
 
 export async function checkoutWithStripe(
   price: Price,
-  redirectPath: string = '/account'
+  redirectPath: string = '/app'
 ): Promise<CheckoutResponse> {
   try {
     // Get the user from Supabase auth
@@ -48,7 +48,7 @@ export async function checkoutWithStripe(
     }
 
     let params: Stripe.Checkout.SessionCreateParams = {
-      // allow_promotion_codes: true,
+      allow_promotion_codes: true,
       // billing_address_collection: 'required',
       customer,
       customer_update: {
