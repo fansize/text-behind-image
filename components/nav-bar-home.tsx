@@ -25,8 +25,8 @@ export default function Nav() {
             </div> */}
 
             <Link href="/app">
-                <Button className="bg-[#2A2B2A] text-white rounded-full hover:bg-[#2A2B2A]/90">
-                    Start For Free
+                <Button className="tracking-wider bg-[#2A2B2A] text-white rounded-full hover:bg-[#2A2B2A]/90">
+                    Start Free
                 </Button>
             </Link>
         </nav>
