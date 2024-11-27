@@ -166,6 +166,7 @@ export default function Pricing({ user, products, subscription }: Props) {
                                         <Button
                                             variant="slim"
                                             type="button"
+                                            disabled
                                             loading={priceIdLoading === price.id}
                                             onClick={() => handleStripeCheckout(price)}
                                             className="block w-full py-2 mt-8 text-sm font-semibold text-center border border-black rounded-md hover:bg-zinc-900"
