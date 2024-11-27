@@ -29,7 +29,7 @@ export const HeroSection = () => {
                         </Link>
                     </Button>
 
-                    <Button
+                    {/* <Button
                         size="lg"
                         variant="outline"
                         className="w-full sm:w-auto" asChild
@@ -44,7 +44,7 @@ export const HeroSection = () => {
                         >
                             Get Inspired
                         </Link>
-                    </Button>
+                    </Button> */}
                 </div>
             </div>
 
