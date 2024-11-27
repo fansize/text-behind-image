@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Link from 'next/link';
+import NavBar from '@/components/nav';
 
 // 添加 STRINGS 常量对象
 const STRINGS = {
@@ -49,57 +50,61 @@ export default async function Account() {
   }
 
   return (
-    <section className="container mx-auto py-10">
-      <div className="flex flex-col items-center justify-center space-y-4 text-center mb-10">
-        <h1 className="text-4xl font-bold tracking-tight">{STRINGS.TITLE}</h1>
-        <p className="text-muted-foreground text-lg">
-          {STRINGS.SUBTITLE}
-        </p>
-      </div>
+    <div>
+      <NavBar />
 
-      <div className="space-y-6 max-w-2xl mx-auto">
-        <Card>
-          <CardHeader>
-            <CardTitle>{STRINGS.PERSONAL_INFO.TITLE}</CardTitle>
-            <CardDescription>{STRINGS.PERSONAL_INFO.DESCRIPTION}</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">{STRINGS.PERSONAL_INFO.EMAIL.LABEL}</Label>
-              <Input id="email" type="email" defaultValue={user.email} disabled />
-              <p className="text-sm text-muted-foreground">
-                {STRINGS.PERSONAL_INFO.EMAIL.HINT}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+      <section className="container mx-auto py-10">
+        <div className="flex flex-col items-center justify-center space-y-4 text-center mb-10">
+          <h1 className="text-4xl font-bold tracking-tight">{STRINGS.TITLE}</h1>
+          <p className="text-muted-foreground text-lg">
+            {STRINGS.SUBTITLE}
+          </p>
+        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>{STRINGS.SUBSCRIPTION.TITLE}</CardTitle>
-            <CardDescription>{STRINGS.SUBSCRIPTION.DESCRIPTION}</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="rounded-lg border p-4">
+        <div className="space-y-6 max-w-2xl mx-auto">
+          <Card>
+            <CardHeader>
+              <CardTitle>{STRINGS.PERSONAL_INFO.TITLE}</CardTitle>
+              <CardDescription>{STRINGS.PERSONAL_INFO.DESCRIPTION}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
               <div className="space-y-2">
-                <p className="text-sm font-medium">
-                  {STRINGS.SUBSCRIPTION.CURRENT_PLAN}: {subscription ? STRINGS.SUBSCRIPTION.SUBSCRIBED : STRINGS.SUBSCRIPTION.FREE_PLAN}
+                <Label htmlFor="email">{STRINGS.PERSONAL_INFO.EMAIL.LABEL}</Label>
+                <Input id="email" type="email" defaultValue={user.email} disabled />
+                <p className="text-sm text-muted-foreground">
+                  {STRINGS.PERSONAL_INFO.EMAIL.HINT}
                 </p>
-                {subscription && (
-                  <p className="text-sm text-muted-foreground">
-                    {STRINGS.SUBSCRIPTION.NEXT_BILLING}: {new Date(subscription.current_period_end).toLocaleDateString()}
-                  </p>
-                )}
               </div>
-            </div>
-            <Link href="/pricing" className="w-full">
-              <Button className="w-full mt-4">
-                {subscription ? STRINGS.SUBSCRIPTION.MANAGE : STRINGS.SUBSCRIPTION.UPGRADE}
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-    </section>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>{STRINGS.SUBSCRIPTION.TITLE}</CardTitle>
+              <CardDescription>{STRINGS.SUBSCRIPTION.DESCRIPTION}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="rounded-lg border p-4">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">
+                    {STRINGS.SUBSCRIPTION.CURRENT_PLAN}: {subscription ? STRINGS.SUBSCRIPTION.SUBSCRIBED : STRINGS.SUBSCRIPTION.FREE_PLAN}
+                  </p>
+                  {subscription && (
+                    <p className="text-sm text-muted-foreground">
+                      {STRINGS.SUBSCRIPTION.NEXT_BILLING}: {new Date(subscription.current_period_end).toLocaleDateString()}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <Link href="/pricing" className="w-full">
+                <Button className="w-full mt-4">
+                  {subscription ? STRINGS.SUBSCRIPTION.MANAGE : STRINGS.SUBSCRIPTION.UPGRADE}
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+    </div>
   );
 }

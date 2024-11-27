@@ -28,6 +28,23 @@ export const HeroSection = () => {
                             Start For Free
                         </Link>
                     </Button>
+
+                    <Button
+                        size="lg"
+                        variant="outline"
+                        className="w-full sm:w-auto" asChild
+                        data-umami-event="Click Get Inspired Button"
+                        data-umami-event-type="navigation"
+                        data-umami-event-location="home_hero"
+                    >
+                        <Link
+                            href="/blog"
+                            title="Get inspired by our blog"
+                            aria-label="Get inspired by our blog"
+                        >
+                            Get Inspired
+                        </Link>
+                    </Button>
                 </div>
             </div>
 
