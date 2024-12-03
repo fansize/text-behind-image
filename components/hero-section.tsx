@@ -4,7 +4,7 @@ import { Compare } from "@/components/hero/compare";
 
 export const HeroSection = () => {
     return (
-        <div className="flex flex-col md:flex-row justify-between px-10 pt-20 pb-4 md:pt-20 md:pb-12 relative z-10 gap-6 mt-10">
+        <div className="flex flex-col md:flex-row justify-between px-10 pt-24 pb-4 md:pt-22 md:pb-12 relative z-10 gap-6 mt-10">
             <div className="mt-0 md:mt-10 flex-1">
                 <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight text-primary mb-6 drop-shadow-md max-w-[12ch] leading-[1.1]">
                     Create Text Behind Image
