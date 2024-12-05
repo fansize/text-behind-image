@@ -20,7 +20,7 @@ type CheckoutResponse = {
 
 export async function checkoutWithStripe(
   price: Price,
-  redirectPath: string = '/app'
+  redirectPath: string = '/account'
 ): Promise<CheckoutResponse> {
   try {
     // 从 Supabase 获取用户信息
