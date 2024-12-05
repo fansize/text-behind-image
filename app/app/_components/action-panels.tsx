@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import { useUser } from '@/hooks/useUser'
-import { getUser, getSubscription } from '@/utils/supabase/queries'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { ArrowDown, Lock, Crown } from 'lucide-react'
@@ -49,7 +47,8 @@ export function UpgradePanel() {
 }
 
 interface SavePanelProps {
-    onDownload: () => void;
+    onDownload: (isHD: boolean) => void;
+    isProActive: boolean;
 }
 
 // 保存小图片
@@ -63,7 +62,7 @@ export function SavePanel({ onDownload }: SavePanelProps) {
                 </div>
 
                 <Button
-                    onClick={onDownload}
+                    onClick={() => onDownload(false)}
                     data-umami-event="download_button_click"
                     data-umami-event-type="action"
                 >
@@ -76,16 +75,15 @@ export function SavePanel({ onDownload }: SavePanelProps) {
 }
 
 // 保存大图片
-export function SaveHDPanel({ onDownload }: SavePanelProps) {
-    const { user } = useUser()
-    const router = useRouter()
+export function SaveHDPanel({ onDownload, isProActive }: SavePanelProps) {
+    const router = useRouter();
 
     const handleClick = () => {
-        if (!user) {
-            router.push('/signin')
+        if (!isProActive) {
+            router.push('/pricing')
             return
         }
-        onDownload()
+        onDownload(true)
     }
 
     return (
@@ -110,13 +108,13 @@ export function SaveHDPanel({ onDownload }: SavePanelProps) {
 }
 
 interface ActionButtonsProps {
-    onDownload: () => void;
+    onDownload: (isHD: boolean) => void;
     isProActive: boolean;
 }
 
 // 修改 ActionButtons 组件传递 onDownload
 export function ActionButtons({ onDownload, isProActive }: ActionButtonsProps) {
-    const [activeTab, setActiveTab] = useState('save')
+    const [activeTab, setActiveTab] = useState(isProActive ? 'save-hd' : 'save')
 
     return (
         <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -131,17 +129,17 @@ export function ActionButtons({ onDownload, isProActive }: ActionButtonsProps) {
             </TabsList>
 
             <TabsContent value="save">
-                <SavePanel onDownload={onDownload} />
+                <SavePanel onDownload={onDownload} isProActive={isProActive} />
             </TabsContent>
             <TabsContent value="save-hd">
-                <SaveHDPanel onDownload={onDownload} />
+                <SaveHDPanel onDownload={onDownload} isProActive={isProActive} />
             </TabsContent>
         </Tabs>
     )
 }
 
 interface ActionPanelsProps {
-    onDownload: () => void;
+    onDownload: (isHD: boolean) => void;
     isProActive: boolean;
 }
 

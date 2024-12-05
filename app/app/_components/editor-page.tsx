@@ -182,7 +182,7 @@ const EditorPage = ({ user, subscription, isProActive }: EditorPageProps) => {
     };
 
     // 保存合成图片
-    const saveCompositeImage = () => {
+    const saveCompositeImage = (isHD: boolean = false) => {
         if (!canvasRef.current || !isImageSetupDone) return;
 
         const canvas = canvasRef.current;
@@ -192,50 +192,45 @@ const EditorPage = ({ user, subscription, isProActive }: EditorPageProps) => {
         const bgImg = new (window as any).Image();
         bgImg.crossOrigin = "anonymous";
         bgImg.onload = () => {
-            // 计算缩放比例
-            let width = bgImg.width;
-            let height = bgImg.height;
-            const ratio = Math.min(
-                MAX_IMAGE_WIDTH / width,
-                MAX_IMAGE_HEIGHT / height,
-                1 // 如果图片本身较小，则不放大
-            );
+            // 计算新的尺寸
+            let newWidth = bgImg.width;
+            let newHeight = bgImg.height;
 
-            // 设置 canvas 尺寸为缩放后的尺寸
-            width = Math.floor(width * ratio);
-            height = Math.floor(height * ratio);
-            canvas.width = width;
-            canvas.height = height;
+            if (!isHD && newWidth > 800) {
+                const ratio = 800 / newWidth;
+                newWidth = 800;
+                newHeight = bgImg.height * ratio;
+            }
 
-            // 绘制背景
-            ctx.drawImage(bgImg, 0, 0, width, height);
+            canvas.width = newWidth;
+            canvas.height = newHeight;
 
-            // 绘制文本，使用相对尺寸
+            // 绘制背景图片
+            ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+
             textSets.forEach(textSet => {
-                ctx.save();
-                // 字体大小使用相对尺寸计算
-                const scaledFontSize = (textSet.fontSize * width) / 1000; // 1000 是一个基准值，可以调整
-                ctx.font = `${textSet.fontWeight} ${scaledFontSize}px ${textSet.fontFamily}`;
+                ctx.save(); // Save the current state
+                ctx.font = `${textSet.fontWeight} ${textSet.fontSize * 3}px ${textSet.fontFamily}`;
                 ctx.fillStyle = textSet.color;
                 ctx.globalAlpha = textSet.opacity;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
 
-                const x = width * (textSet.left + 50) / 100;
-                const y = height * (50 - textSet.top) / 100;
+                const x = canvas.width * (textSet.left + 50) / 100;
+                const y = canvas.height * (50 - textSet.top) / 100;
 
+                // Move the context to the text position and rotate
                 ctx.translate(x, y);
-                ctx.rotate((textSet.rotation * Math.PI) / 180);
-                ctx.fillText(textSet.text, 0, 0);
-                ctx.restore();
+                ctx.rotate((textSet.rotation * Math.PI) / 180); // Convert degrees to radians
+                ctx.fillText(textSet.text, 0, 0); // Draw text at the origin (0, 0)
+                ctx.restore(); // Restore the original state
             });
 
-            // 绘制前景图
             if (removedBgImageUrl) {
                 const removedBgImg = new (window as any).Image();
                 removedBgImg.crossOrigin = "anonymous";
                 removedBgImg.onload = () => {
-                    ctx.drawImage(removedBgImg, 0, 0, width, height);
+                    ctx.drawImage(removedBgImg, 0, 0, canvas.width, canvas.height);
                     triggerDownload();
                 };
                 removedBgImg.src = removedBgImageUrl;
@@ -248,7 +243,7 @@ const EditorPage = ({ user, subscription, isProActive }: EditorPageProps) => {
         function triggerDownload() {
             const dataUrl = canvas.toDataURL('image/png');
             const link = document.createElement('a');
-            link.download = STRINGS.downloadFileName;
+            link.download = 'text-behind-image.png';
             link.href = dataUrl;
             link.click();
         }
@@ -265,37 +260,6 @@ const EditorPage = ({ user, subscription, isProActive }: EditorPageProps) => {
 
     return (
         <div className='flex flex-col min-h-screen'>
-
-
-            {/* <div className='flex flex-row items-center justify-between p-5 px-5 md:px-10'>
-                <input
-                    type="file"
-                    ref={fileInputRef}
-                    style={{ display: 'none' }}
-                    onChange={handleFileChange}
-                    accept=".jpg, .jpeg, .png"
-                />
-
-                <Link href="/" className='text-lg font-semibold'>
-                    {STRINGS.nav.title}
-                </Link>
-
-                <div className='flex flex-row gap-4 items-center'>
-                    {user && (
-                        <>
-                            <span className="text-sm">
-                                {user.email || user.user_metadata.name}
-                            </span>
-                            <Avatar className='h-8 w-8'>
-                                <AvatarImage src={user?.user_metadata.avatar_url} />
-                            </Avatar>
-                        </>
-                    )}
-                    <ModeToggle />
-                </div>
-            </div> */}
-
-
 
             {selectedImage ? (
                 <div className='flex flex-col md:flex-row items-start justify-start gap-10 w-full h-screen p-5 md:p-10'>
@@ -347,33 +311,9 @@ const EditorPage = ({ user, subscription, isProActive }: EditorPageProps) => {
 
                         <canvas ref={canvasRef} style={{ display: 'none' }} />
 
-                        {/* <div className='flex flex-row justify-center gap-4'>
-                            <Button
-                                onClick={handleReupload}
-                                variant={'outline'}
-                                className='mb-8'
-                                data-umami-event={STRINGS.analytics.reuploadImage.event}
-                                data-umami-event-type={STRINGS.analytics.reuploadImage.type}
-                            >
-                                <UploadIcon className='mr-2' />
-                                {STRINGS.buttons.reupload}
-                            </Button>
-
-                            <Button
-                                onClick={saveCompositeImage}
-                                variant={'outline'}
-                                className='mb-8'
-                                data-umami-event={STRINGS.analytics.saveImage.event}
-                                data-umami-event-type={STRINGS.analytics.saveImage.type}
-                                data-umami-event-text_count={textSets.length.toString()}
-                            >
-                                <DownloadIcon className='mr-2' />
-                                {STRINGS.buttons.save}
-                            </Button>
-                        </div> */}
-
+                        {/* 下载按钮面板 */}
                         <ActionPanels
-                            onDownload={saveCompositeImage}
+                            onDownload={(isHD) => saveCompositeImage(isHD)}
                             isProActive={isProActive}
                         />
                     </div>
