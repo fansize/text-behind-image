@@ -325,6 +325,47 @@ const manageSubscriptionStatusChange = async (
     );
 };
 
+// 添加新的函数用于强制创建新的 customer，解决老用户无法创建stripe订单问题
+export async function createNewCustomer({
+  uuid,
+  email
+}: {
+  uuid: string;
+  email: string;
+}): Promise<string> {
+  try {
+    // 1. 创建新的 Stripe customer
+    const customerData = {
+      metadata: {
+        supabaseUUID: uuid
+      }
+    };
+    if (email) customerData['email'] = email;
+
+    const customer = await stripe.customers.create(customerData);
+
+    // 2. 更新或插入 Supabase 中的记录
+    const { error: supabaseError } = await supabaseAdmin
+      .from('customers')
+      .upsert(
+        {
+          id: uuid,
+          stripe_customer_id: customer.id
+        },
+        {
+          onConflict: 'id'
+        }
+      );
+
+    if (supabaseError) throw supabaseError;
+
+    return customer.id;
+  } catch (err) {
+    console.error('Error creating new customer:', err);
+    throw new Error('Unable to create new customer.');
+  }
+}
+
 export {
   upsertProductRecord,
   upsertPriceRecord,

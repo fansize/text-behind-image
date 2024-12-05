@@ -10,6 +10,7 @@ import {
   calculateTrialEndUnixTimestamp
 } from '@/utils/helpers';
 import { Tables } from '@/types_db';
+import { createNewCustomer } from '@/utils/supabase/admin';
 
 type Price = Tables<'prices'>;
 
@@ -44,8 +45,19 @@ export async function checkoutWithStripe(
         email: user?.email || ''
       });
     } catch (err) {
-      console.error(err);
-      throw new Error('Unable to access customer record.');
+      console.error('First attempt to get customer failed:', err);
+
+      // 如果第一次获取失败，尝试强制创建新的 customer
+      try {
+        // 在这里添加一个新的函数调用，强制创建新的 customer
+        customer = await createNewCustomer({
+          uuid: user?.id || '',
+          email: user?.email || ''
+        });
+      } catch (retryErr) {
+        console.error('Retry to create customer failed:', retryErr);
+        throw new Error('Unable to access or create customer record.');
+      }
     }
 
     // 设置 Stripe Checkout 会话的参数
