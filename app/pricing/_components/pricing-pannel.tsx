@@ -159,7 +159,7 @@ export default function Pricing({ user, products, subscription }: Props) {
                                             <span className="text-5xl font-extrabold text-zinc-900 dark:text-white">
                                                 {priceString}
                                             </span>
-                                            <span className="text-base font-medium text-zinc-500 dark:text-zinc-100">
+                                            <span className="text-base font-medium text-zinc-500 dark:text-zinc-100 ml-2">
                                                 /{billingInterval}
                                             </span>
                                         </p>
@@ -168,10 +168,22 @@ export default function Pricing({ user, products, subscription }: Props) {
                                             type="button"
                                             // disabled
                                             loading={priceIdLoading === price.id}
-                                            onClick={() => handleStripeCheckout(price)}
+                                            onClick={() => {
+                                                if (price.unit_amount === 0) {
+                                                    router.push('/app');
+                                                } else if (subscription) {
+                                                    router.push('/account');
+                                                } else {
+                                                    handleStripeCheckout(price);
+                                                }
+                                            }}
                                             className="block w-full py-2 mt-8 text-sm font-semibold text-center border border-black rounded-md hover:bg-zinc-900"
                                         >
-                                            {subscription ? 'Manage' : 'Subscribe'}
+                                            {price.unit_amount === 0
+                                                ? 'Start Now'
+                                                : subscription
+                                                    ? 'Manage'
+                                                    : 'Subscribe'}
                                         </Button>
                                     </div>
                                 </div>
