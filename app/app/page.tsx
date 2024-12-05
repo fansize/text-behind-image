@@ -21,7 +21,7 @@ export default async function Page() {
     return (
         <div>
             <NavBar />
-            <EditorPage user={user} isProActive={isProActive} />
+            <EditorPage user={user} subscription={subscription} isProActive={isProActive} />
         </div>
     );
 }

@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useUser } from '@/hooks/useUser'
-import Authenticate from '@/components/authenticate';
+import { getUser, getSubscription } from '@/utils/supabase/queries'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
-import { ArrowDown, Lock } from 'lucide-react'
+import { ArrowDown, Lock, Crown } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation';
 
@@ -89,39 +89,33 @@ export function SaveHDPanel({ onDownload }: SavePanelProps) {
     }
 
     return (
-        <>
-            <div className="rounded-lg border bg-card p-6">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                    <div className="mb-4 sm:mb-0">
-                        <h3 className="text-base font-semibold">{STRINGS.saveHDPanel.title}</h3>
-                        <p className="text-sm text-muted-foreground">{STRINGS.saveHDPanel.description}</p>
-                    </div>
-
-                    <Button
-                        onClick={handleClick}
-                        data-umami-event="download_hd_button_click"
-                        data-umami-event-type="action"
-                    >
-                        <ArrowDown className="mr-2 h-4 w-4" />
-                        {STRINGS.saveHDPanel.button}
-                    </Button>
+        <div className="rounded-lg border bg-card p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                <div className="mb-4 sm:mb-0">
+                    <h3 className="text-base font-semibold">{STRINGS.saveHDPanel.title}</h3>
+                    <p className="text-sm text-muted-foreground">{STRINGS.saveHDPanel.description}</p>
                 </div>
-            </div>
 
-            {/* <Authenticate
-                show={false}
-                onClose={() => { }}
-            /> */}
-        </>
+                <Button
+                    onClick={handleClick}
+                    data-umami-event="download_hd_button_click"
+                    data-umami-event-type="action"
+                >
+                    <ArrowDown className="mr-2 h-4 w-4" />
+                    {STRINGS.saveHDPanel.button}
+                </Button>
+            </div>
+        </div>
     )
 }
 
 interface ActionButtonsProps {
     onDownload: () => void;
+    isProActive: boolean;
 }
 
 // 修改 ActionButtons 组件传递 onDownload
-export function ActionButtons({ onDownload }: ActionButtonsProps) {
+export function ActionButtons({ onDownload, isProActive }: ActionButtonsProps) {
     const [activeTab, setActiveTab] = useState('save')
 
     return (
@@ -131,7 +125,7 @@ export function ActionButtons({ onDownload }: ActionButtonsProps) {
                     {STRINGS.tabs.save}
                 </TabsTrigger>
                 <TabsTrigger value="save-hd" className="flex-1">
-                    <Lock className="mr-2 h-4 w-4" />
+                    {isProActive ? <Crown className="mr-2 h-4 w-4" /> : <Lock className="mr-2 h-4 w-4" />}
                     {STRINGS.tabs.api}
                 </TabsTrigger>
             </TabsList>
@@ -156,7 +150,7 @@ export function ActionPanels({ onDownload, isProActive }: ActionPanelsProps) {
     return (
         <>
             {!isProActive && <UpgradePanel />}
-            <ActionButtons onDownload={onDownload} />
+            <ActionButtons onDownload={onDownload} isProActive={isProActive} />
         </>
     )
 } 

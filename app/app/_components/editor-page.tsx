@@ -1,19 +1,14 @@
 'use client'
 
+import '@/app/fonts.css'
 import React, { useRef, useState } from 'react';
-import Link from 'next/link';
-import { useUser } from '@/hooks/useUser';
 import { useSessionContext } from '@supabase/auth-helpers-react';
-import { Avatar, AvatarImage } from "@/components/ui/avatar"
-import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { removeBackground } from "@imgly/background-removal";
 import { PlusIcon, ReloadIcon, DownloadIcon, UploadIcon } from '@radix-ui/react-icons';
 import TextCustomizer from '@/components/editor/text-customizer';
 import Image from 'next/image';
 import { Accordion } from '@/components/ui/accordion';
-import '@/app/fonts.css'
-import { ModeToggle } from '@/components/mode-toggle';
 import UploadPrompt from './upload-prompt';
 import { ActionPanels } from './action-panels';
 
@@ -73,11 +68,12 @@ const STRINGS = {
 } as const;
 
 interface EditorPageProps {
-    user: any; // 根据实际类型定义
-    isProActive: boolean;
+    user: any; // 用户信息
+    subscription: any; // 订阅信息
+    isProActive: boolean; // 是否激活
 }
 
-const EditorPage = ({ user, isProActive }: EditorPageProps) => {
+const EditorPage = ({ user, subscription, isProActive }: EditorPageProps) => {
     const { session } = useSessionContext();
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [isImageSetupDone, setIsImageSetupDone] = useState<boolean>(false);
