@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "stripe:login": "stripe login",
-    "stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks"
+    "stripe:listen": "stripe listen --forward-to=localhost:3000/webhook/stripe"
   },
   "dependencies": {
     "@imgly/background-removal": "^1.5.5",
