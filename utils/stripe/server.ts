@@ -23,19 +23,20 @@ export async function checkoutWithStripe(
   redirectPath: string = '/app'
 ): Promise<CheckoutResponse> {
   try {
-    // Get the user from Supabase auth
+    // 从 Supabase 获取用户信息
     const supabase = createClient();
     const {
       error,
       data: { user }
     } = await supabase.auth.getUser();
 
+    // 如果获取用户信息失败，抛出错误
     if (error || !user) {
       console.error(error);
       throw new Error('Could not get user session.');
     }
 
-    // Retrieve or create the customer in Stripe
+    // 在 Stripe 中检索或创建客户
     let customer: string;
     try {
       customer = await createOrRetrieveCustomer({
@@ -47,23 +48,25 @@ export async function checkoutWithStripe(
       throw new Error('Unable to access customer record.');
     }
 
+    // 设置 Stripe Checkout 会话的参数
     let params: Stripe.Checkout.SessionCreateParams = {
       allow_promotion_codes: true,
-      // billing_address_collection: 'required',
+      // billing_address_collection: 'required', // 可选：要求用户提供账单地址
       customer,
       customer_update: {
-        address: 'auto'
+        address: 'auto' // 自动更新客户地址
       },
       line_items: [
         {
-          price: price.id,
-          quantity: 1
+          price: price.id, // 价格 ID
+          quantity: 1 // 数量
         }
       ],
-      cancel_url: getURL(),
-      success_url: getURL(redirectPath)
+      cancel_url: getURL(), // 取消支付时的重定向 URL
+      success_url: getURL(redirectPath) // 支付成功后的重定向 URL
     };
 
+    // 如果价格类型为“recurring”，设置订阅模式和试用期结束时间
     console.log(
       'Trial end:',
       calculateTrialEndUnixTimestamp(price.trial_period_days)
@@ -77,13 +80,14 @@ export async function checkoutWithStripe(
         }
       };
     } else if (price.type === 'one_time') {
+      // 如果价格类型为“一次性”，设置支付模式
       params = {
         ...params,
         mode: 'payment'
       };
     }
 
-    // Create a checkout session in Stripe
+    // 在 Stripe 中创建 Checkout 会话
     let session;
     try {
       session = await stripe.checkout.sessions.create(params);
@@ -92,7 +96,7 @@ export async function checkoutWithStripe(
       throw new Error('Unable to create checkout session.');
     }
 
-    // Instead of returning a Response, just return the data or error.
+    // 返回会话 ID 或错误重定向
     if (session) {
       return { sessionId: session.id };
     } else {
@@ -121,12 +125,14 @@ export async function checkoutWithStripe(
 
 export async function createStripePortal(currentPath: string) {
   try {
+    // 从 Supabase 获取用户信息
     const supabase = createClient();
     const {
       error,
       data: { user }
     } = await supabase.auth.getUser();
 
+    // 如果获取用户信息失败，抛出错误
     if (!user) {
       if (error) {
         console.error(error);
@@ -134,6 +140,7 @@ export async function createStripePortal(currentPath: string) {
       throw new Error('Could not get user session.');
     }
 
+    // 在 Stripe 中检索或创建客户
     let customer;
     try {
       customer = await createOrRetrieveCustomer({
@@ -145,14 +152,16 @@ export async function createStripePortal(currentPath: string) {
       throw new Error('Unable to access customer record.');
     }
 
+    // 如果无法获取客户信息，抛出错误
     if (!customer) {
       throw new Error('Could not get customer.');
     }
 
+    // 创建 Stripe 计费门户会话
     try {
       const { url } = await stripe.billingPortal.sessions.create({
         customer,
-        return_url: getURL('/account')
+        return_url: getURL('/account') // 返回的 URL
       });
       if (!url) {
         throw new Error('Could not create billing portal');

@@ -14,7 +14,8 @@ import { SignOut } from "@/utils/auth-helpers/server";
 const STRINGS = {
     brand: "TextBehindImage",
     profile: "Profile",
-    subscriptionStatus: "Subscription Status",
+    account: "Account",
+    subscriptionStatus: "Manage Subscription",
     subscribed: "Subscribed",
     upgradePro: "Upgrade to Pro",
     login: "Login",
@@ -34,7 +35,7 @@ export default function NavBarClient({ user, products, subscription }) {
                         <div className="flex items-center gap-1">
                             <DropdownMenu>
                                 <DropdownMenuTrigger className="flex items-center gap-1">
-                                    <span className="text-sm font-medium text-zinc-700 dark:text-zinc-200">{STRINGS.profile}</span>
+                                    <span className="text-sm font-medium text-zinc-700 dark:text-zinc-200">{user.email}</span>
                                     <ChevronDown className="w-4 h-4 text-zinc-700 dark:text-zinc-200" />
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-[200px]">
@@ -42,14 +43,10 @@ export default function NavBarClient({ user, products, subscription }) {
                                         <>
                                             <DropdownMenuItem asChild>
                                                 <Link href="/account" className="text-sm">
-                                                    {user.email}
+                                                    {STRINGS.subscriptionStatus}
                                                 </Link>
                                             </DropdownMenuItem>
-                                            {subscription && (
-                                                <DropdownMenuItem className="text-sm">
-                                                    {STRINGS.subscriptionStatus}: {subscription.status}
-                                                </DropdownMenuItem>
-                                            )}
+
                                             <DropdownMenuItem asChild>
                                                 <form action={async (formData) => {
                                                     await SignOut(formData);
@@ -70,7 +67,7 @@ export default function NavBarClient({ user, products, subscription }) {
 
                 {user ? (
                     subscription ? (
-                        <Button className="bg-green-600 text-white rounded-full hover:bg-green-700">
+                        <Button className="bg-orange-600 text-white rounded-full hover:bg-orange-700">
                             {STRINGS.subscribed}
                         </Button>
                     ) : (

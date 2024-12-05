@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
+import { createStripePortal } from '@/utils/stripe/server';
 import {
   getUserDetails,
   getSubscription,
@@ -49,6 +50,9 @@ export default async function Account() {
     return redirect('/signin');
   }
 
+  // 获取 Stripe Portal URL
+  const portalUrl = subscription ? await createStripePortal('/account') : null;
+
   return (
     <div>
       <NavBar />
@@ -96,11 +100,21 @@ export default async function Account() {
                   )}
                 </div>
               </div>
-              <Link href="/pricing" className="w-full">
-                <Button className="w-full mt-4">
-                  {subscription ? STRINGS.SUBSCRIPTION.MANAGE : STRINGS.SUBSCRIPTION.UPGRADE}
-                </Button>
-              </Link>
+              {subscription ? (
+                // 已订阅用户显示管理订阅按钮，链接到 Stripe Portal
+                <Link href={portalUrl ?? '#'} className="w-full">
+                  <Button className="w-full mt-4">
+                    {STRINGS.SUBSCRIPTION.MANAGE}
+                  </Button>
+                </Link>
+              ) : (
+                // 未订阅用户显示升级按钮，链接到定价页面
+                <Link href="/pricing" className="w-full">
+                  <Button className="w-full mt-4">
+                    {STRINGS.SUBSCRIPTION.UPGRADE}
+                  </Button>
+                </Link>
+              )}
             </CardContent>
           </Card>
         </div>
