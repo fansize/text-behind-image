@@ -192,14 +192,15 @@ const EditorPage = ({ user, subscription, isProActive }: EditorPageProps) => {
         const bgImg = new (window as any).Image();
         bgImg.crossOrigin = "anonymous";
         bgImg.onload = () => {
-            // 计算新的尺寸
+            // 计算新的尺寸和缩放比例
             let newWidth = bgImg.width;
             let newHeight = bgImg.height;
+            let scale = 1;
 
             if (!isHD && newWidth > 800) {
-                const ratio = 800 / newWidth;
+                scale = 800 / newWidth;
                 newWidth = 800;
-                newHeight = bgImg.height * ratio;
+                newHeight = bgImg.height * scale;
             }
 
             canvas.width = newWidth;
@@ -209,8 +210,10 @@ const EditorPage = ({ user, subscription, isProActive }: EditorPageProps) => {
             ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
 
             textSets.forEach(textSet => {
-                ctx.save(); // Save the current state
-                ctx.font = `${textSet.fontWeight} ${textSet.fontSize * 3}px ${textSet.fontFamily}`;
+                ctx.save();
+                // 根据缩放比例调整字体大小
+                const scaledFontSize = textSet.fontSize * 3 * scale;
+                ctx.font = `${textSet.fontWeight} ${scaledFontSize}px ${textSet.fontFamily}`;
                 ctx.fillStyle = textSet.color;
                 ctx.globalAlpha = textSet.opacity;
                 ctx.textAlign = 'center';
@@ -219,11 +222,10 @@ const EditorPage = ({ user, subscription, isProActive }: EditorPageProps) => {
                 const x = canvas.width * (textSet.left + 50) / 100;
                 const y = canvas.height * (50 - textSet.top) / 100;
 
-                // Move the context to the text position and rotate
                 ctx.translate(x, y);
-                ctx.rotate((textSet.rotation * Math.PI) / 180); // Convert degrees to radians
-                ctx.fillText(textSet.text, 0, 0); // Draw text at the origin (0, 0)
-                ctx.restore(); // Restore the original state
+                ctx.rotate((textSet.rotation * Math.PI) / 180);
+                ctx.fillText(textSet.text, 0, 0);
+                ctx.restore();
             });
 
             if (removedBgImageUrl) {
@@ -287,7 +289,7 @@ const EditorPage = ({ user, subscription, isProActive }: EditorPageProps) => {
                                         transform: `translate(-50%, -50%) rotate(${textSet.rotation}deg)`,
                                         color: textSet.color,
                                         textAlign: 'center',
-                                        fontSize: `${textSet.fontSize * 0.1}vw`,
+                                        fontSize: `${textSet.fontSize}px`,
                                         fontWeight: textSet.fontWeight,
                                         fontFamily: textSet.fontFamily,
                                         opacity: textSet.opacity,
