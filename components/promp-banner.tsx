@@ -9,7 +9,7 @@ const PROMO_CONFIG = {
         emojiLabel: 'shopping cart',
         message: 'Help us keep building - Shop our handmade store!',
         linkText: 'Shop Now',
-        linkUrl: 'https://oodicraft.store?utm_source=textbehindimage',
+        linkUrl: 'https://www.etsy.com/shop/OodiCraft?utm_source=textbehindimage',
         closeAriaLabel: 'Close banner',
         closeIcon: '×'
     }
