@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import NavBar from "@/components/nav";
+import Footer from "@/components/footer";
 
 export const metadata: Metadata = {
     metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://textbehindimage.site'),
@@ -31,6 +32,7 @@ export default function BlogLayout({
         <div>
             <NavBar />
             {children}
+            <Footer />
         </div>
     )
 }

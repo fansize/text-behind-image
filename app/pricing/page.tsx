@@ -6,6 +6,7 @@ import {
     getUser
 } from '@/utils/supabase/queries';
 import NavBar from '@/components/nav';
+import Footer from '@/components/footer';
 
 export default async function PricingPage() {
     const supabase = createClient();
@@ -24,6 +25,7 @@ export default async function PricingPage() {
                 products={products ?? []}
                 subscription={subscription}
             />
+            <Footer />
         </div>
     );
 }
