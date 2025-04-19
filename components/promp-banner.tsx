@@ -7,9 +7,9 @@ const PROMO_CONFIG = {
     content: {
         emoji: '🛍',
         emojiLabel: 'shopping cart',
-        message: 'Help us keep building - Shop our handmade store!',
+        message: 'Help us keep building!',
         linkText: 'Shop Now',
-        linkUrl: 'https://oodicraft.store?utm_source=textbehindimage',
+        linkUrl: 'https://wrlmfy.com?utm_source=textbehindimage',
         closeAriaLabel: 'Close banner',
         closeIcon: '×'
     }
