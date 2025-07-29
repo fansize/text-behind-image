@@ -6,10 +6,10 @@ import { Label } from '@/components/ui/label';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Command, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from '@/components/ui/command';
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { fonts } from '@/constants/fonts';
 
-interface FontFamilyPickerProps { 
+interface FontFamilyPickerProps {
   attribute: string;
   currentFont: string;
   handleAttributeChange: (attribute: string, value: string) => void;

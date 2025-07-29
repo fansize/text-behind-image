@@ -12,6 +12,7 @@ import Script from "next/script";
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://textbehindimage.site'),
   title: "Text Behind Image | Free Online Image Text Overlay Tool",
   description: "Create professional text overlays on images easily. Perfect for Google Slides, presentations, social media posts, and graphic design. Free online tool for putting text behind or in front of images.",
   keywords: "text behind image, image text overlay, Google Slides text overlay, image editing tool, text on images, graphic design tool",

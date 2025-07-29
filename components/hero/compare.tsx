@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { SparklesCore } from "@/components/hero/sparkles";
 import { AnimatePresence, motion } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/utils";
 import { IconDotsVertical } from "@tabler/icons-react";
 
 interface CompareProps {

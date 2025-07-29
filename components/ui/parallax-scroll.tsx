@@ -3,7 +3,7 @@ import { useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { motion } from "framer-motion";
 import Image, { StaticImageData } from "next/image";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/utils";
 
 export const ParallaxScroll = ({
   images,
@@ -34,7 +34,7 @@ export const ParallaxScroll = ({
     >
       <h2 className="sr-only">Text Behind Image Use Cases and Examples - See How Others Create Amazing Text Overlay Effects</h2>
       <div
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-7xl items-start justify-start mx-auto gap-10 pt-20 px-10"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-7xl items-start justify-start mx-auto gap-10 pt-10 px-10 md:pt-14"
         ref={gridRef}
       >
         <div className="grid gap-10">

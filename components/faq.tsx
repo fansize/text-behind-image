@@ -43,7 +43,7 @@ export const FAQ: FC<{ items?: FAQItem[] }> = (props) => {
     const { items = DEFAULT_ITEMS } = props;
     return (
 
-        <div className="w-full px-10 py-6 md:px-8">
+        <div className="w-full px-10 py-2 md:py-6 md:px-8">
             <div className="mx-auto max-w-6xl">
                 <h2 className="text-3xl font-bold tracking-tight text-primary sm:text-4xl text-center mb-8">
                     FAQ
