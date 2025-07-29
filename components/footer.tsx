@@ -32,12 +32,12 @@ export default function Footer() {
                 <div className="mb-8 flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400 items-center">
                     <span>More Tools</span>
                     <Link
-                        href="https://gpt4oo.com/?utm_source=textbehindimage.site"
+                        href="https://wrlmfy.com/?utm_source=textbehindimage.site"
                         className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        GPT4oo
+                        Teleprompter
                     </Link>
                     <Link
                         href="https://tiny-pics.vercel.app/?utm_source=textbehindimage.site"

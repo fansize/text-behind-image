@@ -1,24 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Text Behind Image
+A powerful web application that creates stunning text-behind-image effects using AI-powered background removal. Built with Next.js.
 
-## Getting Started
+![og-image.png](public/og-image.png)
 
-First, run the development server:
+## ✨ Features
+- AI Background Removal : Automatically remove backgrounds from images using advanced AI technology
+- Text Overlay Editor : Add and customize text layers with full control over:
+  - Font family and size
+  - Colors and opacity
+  - Text shadows and rotation
+  - Position and layering
+- Real-time Preview : See your changes instantly as you edit
+- Multiple Text Layers : Add, duplicate, and manage multiple text elements
+- High-Quality Export : Download your creations in high resolution
+- Template Gallery : Choose from pre-designed templates to get started quickly
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+
+- pnpm (recommended) or npm
+- Supabase account for authentication
+- Stripe account for payments (optional)
+
+### Installation
+1.  Clone the repository:
+
+```
+git clone https://github.com/fansize/text-behind-image.git
+cd text-behind-image
 ```
 
-## Stripe Workflow
+2.  Install dependencies:
 
-sequenceDiagram
-Client->>Server: 1. 请求创建支付
-Server->>Stripe API: 2. 创建 PaymentIntent
-Stripe API->>Server: 3. 返回 clientSecret
-Server->>Client: 4. 发送 clientSecret
-Client->>Stripe.js: 5. 使用 clientSecret 确认支付
+```
+pnpm install
+```
+3.  Set up environment variables:
+
+Create a .env.local file with your Supabase and Stripe credentials.
+
+4.  Run the development server:
+
+```
+pnpm dev
+```
+Open http://localhost:3000 to view the application.
+
+## 🛠️ Tech Stack
+- Framework : Next.js
+- Styling : Tailwind CSS + shadcn/ui components
+- Authentication : Supabase Auth
+- Database : Supabase
+- Payments : Stripe
+- AI Processing : @imgly/background-removal
+- Animations : Framer Motion
+
+
+## 📄 License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🤝 Contributing
+Contributions are welcome! Please feel free to submit a Pull Request.
