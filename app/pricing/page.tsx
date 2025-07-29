@@ -1,3 +1,5 @@
+import NavBar from '@/components/nav';
+import Footer from '@/components/footer';
 import Pricing from './_components/pricing-pannel';
 import { createClient } from '@/utils/supabase/server';
 import {
@@ -5,8 +7,7 @@ import {
     getSubscription,
     getUser
 } from '@/utils/supabase/queries';
-import NavBar from '@/components/nav';
-import Footer from '@/components/footer';
+
 
 export default async function PricingPage() {
     const supabase = createClient();
@@ -17,14 +18,17 @@ export default async function PricingPage() {
     ]);
 
     return (
-        <div>
+        <div className='min-h-screen flex flex-col'>
             <NavBar />
-
-            <Pricing
-                user={user}
-                products={products ?? []}
-                subscription={subscription}
-            />
+            
+            <div className='flex-1'>
+                <Pricing
+                    user={user}
+                    products={products ?? []}
+                    subscription={subscription}
+                />
+            </div>
+            
             <Footer />
         </div>
     );
