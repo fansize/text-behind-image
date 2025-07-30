@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { ArrowDown, Lock, Crown } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation';
+import UserSurvey from '@/components/user-survey'
 
 const STRINGS = {
     tabs: {
@@ -53,24 +55,51 @@ interface SavePanelProps {
 
 // 保存小图片
 export function SavePanel({ onDownload }: SavePanelProps) {
-    return (
-        <div className="rounded-lg border bg-card p-6">
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between">
-                <div className="mb-4 sm:mb-0">
-                    <h3 className="text-base font-semibold">{STRINGS.savePanel.title}</h3>
-                    <p className="text-sm text-muted-foreground">{STRINGS.savePanel.description}</p>
-                </div>
+    const [showSurvey, setShowSurvey] = useState(false)
+    const [hasShownSurvey, setHasShownSurvey] = useState(false)
 
-                <Button
-                    onClick={() => onDownload(false)}
-                    data-umami-event="download_button_click"
-                    data-umami-event-type="action"
-                >
-                    <ArrowDown className="mr-2 h-4 w-4" />
-                    {STRINGS.savePanel.button}
-                </Button>
+    const handleDownload = () => {
+        // 先执行下载
+        onDownload(false)
+        
+        // 如果是第一次下载，下载完成后显示调查弹窗
+        if (!hasShownSurvey) {
+            setShowSurvey(true)
+            setHasShownSurvey(true)
+        }
+    }
+
+    const handleSurveyComplete = () => {
+        setShowSurvey(false)
+    }
+
+    return (
+        <>
+            <div className="rounded-lg border bg-card p-6">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between">
+                    <div className="mb-4 sm:mb-0">
+                        <h3 className="text-base font-semibold">{STRINGS.savePanel.title}</h3>
+                        <p className="text-sm text-muted-foreground">{STRINGS.savePanel.description}</p>
+                    </div>
+
+                    <Button
+                        onClick={handleDownload}
+                        data-umami-event="download_button_click"
+                        data-umami-event-type="action"
+                    >
+                        <ArrowDown className="mr-2 h-4 w-4" />
+                        {STRINGS.savePanel.button}
+                    </Button>
+                </div>
             </div>
-        </div >
+
+            {/* 用户调查弹窗 */}
+            <Dialog open={showSurvey} onOpenChange={setShowSurvey}>
+                <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full mx-auto p-4 sm:p-6">
+                    <UserSurvey onComplete={handleSurveyComplete} />
+                </DialogContent>
+            </Dialog>
+        </>
     )
 }
 
@@ -151,4 +180,4 @@ export function ActionPanels({ onDownload, isProActive }: ActionPanelsProps) {
             <ActionButtons onDownload={onDownload} isProActive={isProActive} />
         </>
     )
-} 
+}

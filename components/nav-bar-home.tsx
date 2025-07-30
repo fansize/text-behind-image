@@ -5,7 +5,7 @@ import PromoBanner from "./promp-banner"
 export default function Nav() {
     return (
         <div className="fixed top-0 left-0 right-0 z-50">
-            <PromoBanner />
+            {/* <PromoBanner /> */}
             <nav className="flex items-center justify-between px-10 md:px-10 py-4 border-b bg-white/80 backdrop-blur-md transition-all duration-300">
                 <Link href="/" className="text-xl font-bold">
                     TextBehindImage
