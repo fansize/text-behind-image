@@ -1,17 +1,17 @@
 'use client'
 
 import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/hooks/use-toast'
 
+// 统一使用数据库格式
 interface SurveyData {
-  useCases: string[]
-  struggles: string[]
-  suggestions: string
+  question1_answers: string[]
+  question2_answers: string[]
+  question3_answer: string
 }
 
 const STRINGS = {
@@ -19,24 +19,31 @@ const STRINGS = {
   description: 'Your feedback helps us build better tools for you',
   questions: {
     useCases: {
-      title: '1.When do you need Text Behind Image?',
+      title: '1. What type of content do you create with Text Behind Image?',
       options: [
-        'Creating social media graphics',
-        'Making video thumbnails',
-        'Building presentation slides',
+        'Instagram, Facebook, Twitter',
+        'YouTube thumbnails',
+        'Business presentations',
+        'Marketing materials (ads, banners, flyers)',
+        'Personal projects',
+        'E-commerce product images',
+        'Blog posts',
+        'Website headers and hero sections',
         'Other'
       ]
     },
     struggles: {
-      title: "2.What's your struggle with current tools?",
+      title: "2. What's your biggest challenge?",
       options: [
-        'Lack of auto-layout adjustment',
-        'Hard to blend text naturally with background'
+        'Unsatisfied with output quality',
+        'Manual positioning takes too long',
+        'Limited templates and styles',
+        'Tools too complex to use',
       ]
     },
     suggestions: {
-      title: '3.What should we build next?',
-      placeholder: 'Tell us what features or improvements you\'d like to see...'
+      title: '3. What should we build next?',
+      placeholder: 'Share your feature suggestions...'
     }
   },
   button: {
@@ -60,45 +67,59 @@ const STRINGS = {
 }
 
 interface UserSurveyProps {
-  onComplete?: () => void // 添加完成回调
+  onComplete?: () => void
 }
 
 export default function UserSurvey({ onComplete }: UserSurveyProps) {
   const [surveyData, setSurveyData] = useState<SurveyData>({
-    useCases: [],
-    struggles: [],
-    suggestions: ''
+    question1_answers: [],
+    question2_answers: [],
+    question3_answer: ''
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
 
+  // 生成会话ID用于匿名用户
+  const [sessionId] = useState(() => {
+    if (typeof window !== 'undefined') {
+      let id = localStorage.getItem('survey_session_id')
+      if (!id) {
+        id = crypto.randomUUID()
+        localStorage.setItem('survey_session_id', id)
+      }
+      return id
+    }
+    return crypto.randomUUID()
+  })
+
   const handleUseCaseChange = (option: string, checked: boolean) => {
     setSurveyData(prev => ({
       ...prev,
-      useCases: checked 
-        ? [...prev.useCases, option]
-        : prev.useCases.filter(item => item !== option)
+      question1_answers: checked 
+        ? [...prev.question1_answers, option]
+        : prev.question1_answers.filter(item => item !== option)
     }))
   }
 
   const handleStruggleChange = (option: string, checked: boolean) => {
     setSurveyData(prev => ({
       ...prev,
-      struggles: checked 
-        ? [...prev.struggles, option]
-        : prev.struggles.filter(item => item !== option)
+      question2_answers: checked 
+        ? [...prev.question2_answers, option]
+        : prev.question2_answers.filter(item => item !== option)
     }))
   }
 
   const handleSuggestionsChange = (value: string) => {
     setSurveyData(prev => ({
       ...prev,
-      suggestions: value
+      question3_answer: value
     }))
   }
 
   const handleSubmit = async () => {
-    if (surveyData.useCases.length === 0) {
+    // 验证必填项
+    if (surveyData.question1_answers.length === 0) {
       toast({
         title: STRINGS.toast.validation.title,
         description: STRINGS.toast.validation.description,
@@ -110,32 +131,44 @@ export default function UserSurvey({ onComplete }: UserSurveyProps) {
     setIsSubmitting(true)
     
     try {
-      // 这里可以添加提交到后端的逻辑
-      console.log('Survey data:', surveyData)
-      
-      // 模拟API调用
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      toast({
-        title: STRINGS.toast.success.title,
-        description: STRINGS.toast.success.description
+      const response = await fetch('/api/survey', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...surveyData,
+          session_id: sessionId
+        })
       })
-      
-      // 重置表单
-      setSurveyData({
-        useCases: [],
-        struggles: [],
-        suggestions: ''
-      })
-      
-      // 调用完成回调
-      onComplete?.()
+
+      if (response.ok) {
+        toast({
+          title: STRINGS.toast.success.title,
+          description: STRINGS.toast.success.description
+        })
+        
+        // 重置表单
+        setSurveyData({
+          question1_answers: [],
+          question2_answers: [],
+          question3_answer: ''
+        })
+        
+        // 调用完成回调
+        onComplete?.()
+      } else {
+        throw new Error('Failed to save survey')
+      }
     } catch (error) {
+      console.error('Survey submission error:', error)
       toast({
         title: STRINGS.toast.error.title,
         description: STRINGS.toast.error.description,
         variant: "destructive"
       })
+      // 即使出错也调用完成回调，不阻塞用户操作
+      onComplete?.()
     } finally {
       setIsSubmitting(false)
     }
@@ -148,8 +181,9 @@ export default function UserSurvey({ onComplete }: UserSurveyProps) {
           {STRINGS.title}
         </h2>
       </div>
+
       <div className="space-y-8">
-        {/* 第一个问题：使用场景 */}
+        {/* 第一个问题 */}
         <div className="space-y-4">
           <Label className="text-lg font-semibold">
             {STRINGS.questions.useCases.title}
@@ -159,7 +193,7 @@ export default function UserSurvey({ onComplete }: UserSurveyProps) {
               <div key={option} className="flex items-center space-x-2">
                 <Checkbox
                   id={`usecase-${option}`}
-                  checked={surveyData.useCases.includes(option)}
+                  checked={surveyData.question1_answers.includes(option)}
                   onCheckedChange={(checked) => 
                     handleUseCaseChange(option, checked as boolean)
                   }
@@ -175,7 +209,7 @@ export default function UserSurvey({ onComplete }: UserSurveyProps) {
           </div>
         </div>
 
-        {/* 第二个问题：遇到的困难 */}
+        {/* 第二个问题 */}
         <div className="space-y-4">
           <Label className="text-lg font-semibold">
             {STRINGS.questions.struggles.title}
@@ -185,7 +219,7 @@ export default function UserSurvey({ onComplete }: UserSurveyProps) {
               <div key={option} className="flex items-center space-x-2">
                 <Checkbox
                   id={`struggle-${option}`}
-                  checked={surveyData.struggles.includes(option)}
+                  checked={surveyData.question2_answers.includes(option)}
                   onCheckedChange={(checked) => 
                     handleStruggleChange(option, checked as boolean)
                   }
@@ -201,7 +235,7 @@ export default function UserSurvey({ onComplete }: UserSurveyProps) {
           </div>
         </div>
 
-        {/* 第三个问题：建议 */}
+        {/* 第三个问题 */}
         <div className="space-y-4">
           <Label htmlFor="suggestions" className="text-lg font-semibold">
             {STRINGS.questions.suggestions.title}
@@ -209,7 +243,7 @@ export default function UserSurvey({ onComplete }: UserSurveyProps) {
           <Textarea
             id="suggestions"
             placeholder={STRINGS.questions.suggestions.placeholder}
-            value={surveyData.suggestions}
+            value={surveyData.question3_answer}
             onChange={(e) => handleSuggestionsChange(e.target.value)}
             className="min-h-[100px] resize-none"
           />
