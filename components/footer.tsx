@@ -21,6 +21,9 @@ export default function Footer() {
                     <Link href="/pricing" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
                         Pricing
                     </Link>
+                    <Link href="/survey" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
+                        Feedback
+                    </Link>
                 </div>
 
                 <div className="mb-2 flex space-x-2 text-sm text-gray-500 dark:text-gray-400">
