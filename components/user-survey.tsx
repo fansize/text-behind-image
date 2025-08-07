@@ -80,17 +80,7 @@ export default function UserSurvey({ onComplete }: UserSurveyProps) {
   const { toast } = useToast()
 
   // 生成会话ID用于匿名用户
-  const [sessionId] = useState(() => {
-    if (typeof window !== 'undefined') {
-      let id = localStorage.getItem('survey_session_id')
-      if (!id) {
-        id = crypto.randomUUID()
-        localStorage.setItem('survey_session_id', id)
-      }
-      return id
-    }
-    return crypto.randomUUID()
-  })
+ 
 
   const handleUseCaseChange = (option: string, checked: boolean) => {
     setSurveyData(prev => ({
@@ -136,10 +126,7 @@ export default function UserSurvey({ onComplete }: UserSurveyProps) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...surveyData,
-          session_id: sessionId
-        })
+        body: JSON.stringify(surveyData)
       })
 
       if (response.ok) {

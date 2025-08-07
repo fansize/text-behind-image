@@ -14,7 +14,7 @@ const STRINGS = {
     },
     upgrade: {
         title: 'Upgrade',
-        description: 'to a paid plan to remove the watermark and download HD images.'
+        description: 'to download HD images.'
     },
     savePanel: {
         title: 'Download the image as a PNG',

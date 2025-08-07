@@ -2,7 +2,6 @@
 
 import '@/app/fonts.css'
 import React, { useRef, useState } from 'react';
-import { useSessionContext } from '@supabase/auth-helpers-react';
 import { Button } from '@/components/ui/button';
 import { removeBackground } from "@imgly/background-removal";
 import { PlusIcon, ReloadIcon, DownloadIcon, UploadIcon } from '@radix-ui/react-icons';
@@ -11,6 +10,7 @@ import Image from 'next/image';
 import { Accordion } from '@/components/ui/accordion';
 import UploadPrompt from './upload-prompt';
 import { ActionPanels } from './action-panels';
+import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 
 const STRINGS = {
     nav: {
@@ -74,17 +74,30 @@ interface EditorPageProps {
 }
 
 const EditorPage = ({ user, subscription, isProActive }: EditorPageProps) => {
-    const { session } = useSessionContext();
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [isImageSetupDone, setIsImageSetupDone] = useState<boolean>(false);
     const [removedBgImageUrl, setRemovedBgImageUrl] = useState<string | null>(null);
     const [textSets, setTextSets] = useState<Array<any>>([]);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    // 添加常量定义
-    const MAX_IMAGE_WIDTH = 1600; // 设置最大宽度
-    const MAX_IMAGE_HEIGHT = 1200; // 设置最大高度
+       // 检测当前设备是否为移动端
+    const isMobileDevice = (): 'mobile' | 'pc' => {
+        if (typeof window !== 'undefined') {
+            // 检测屏幕宽度
+            if (window.innerWidth <= 768) {
+                return 'mobile';
+            }
+            // 检测用户代理字符串
+            const userAgent = navigator.userAgent.toLowerCase();
+            const mobileKeywords = ['mobile', 'android', 'iphone', 'ipad', 'ipod', 'blackberry', 'windows phone'];
+            if (mobileKeywords.some(keyword => userAgent.includes(keyword))) {
+                return 'mobile';
+            }
+        }
+        return 'pc';
+    };
 
     // 处理图片选择
     const handleImageSelect = async (imageUrl: string, removedBgUrl?: string) => {
@@ -145,8 +158,12 @@ const EditorPage = ({ user, subscription, isProActive }: EditorPageProps) => {
     };
 
     // 添加新的文本层
-    const addNewTextSet = () => {
+    const addNewTextSet = (deviceType?: 'mobile' | 'pc') => {
         const newId = Math.max(...textSets.map(set => set.id), 0) + 1;
+        const baseFontSize = deviceType === 'mobile' 
+            ? STRINGS.defaults.text.fontSize * 2 / 3 
+            : STRINGS.defaults.text.fontSize;
+            
         setTextSets(prev => [...prev, {
             id: newId,
             text: STRINGS.defaultText,
@@ -154,7 +171,7 @@ const EditorPage = ({ user, subscription, isProActive }: EditorPageProps) => {
             top: 20,
             left: 0,
             color: STRINGS.defaults.text.color,
-            fontSize: STRINGS.defaults.text.fontSize,
+            fontSize: baseFontSize,
             fontWeight: STRINGS.defaults.text.fontWeight,
             opacity: STRINGS.defaults.text.opacity,
             shadowColor: STRINGS.defaults.text.shadowColor,
@@ -264,10 +281,10 @@ const EditorPage = ({ user, subscription, isProActive }: EditorPageProps) => {
         <div className='flex flex-col min-h-screen'>
 
             {selectedImage ? (
-                <div className='flex flex-col md:flex-row items-start justify-start gap-10 w-full h-screen p-5 md:p-10'>
+                <div className='flex flex-col md:flex-row items-start justify-start gap-1 md:gap-10 w-full h-screen p-5 md:p-10'>
                     {/* 图片效果展示区 */}
                     <div className='flex flex-col w-full gap-4'>
-                        <div className="min-h-[400px] w-full p-4 border rounded-lg relative overflow-hidden">
+                        <div className="min-h-[300px] md:min-h-[400px] w-full p-4 border rounded-lg relative overflow-hidden">
                             {isImageSetupDone ? (
                                 <Image
                                     src={selectedImage}
@@ -313,25 +330,22 @@ const EditorPage = ({ user, subscription, isProActive }: EditorPageProps) => {
 
                         <canvas ref={canvasRef} style={{ display: 'none' }} />
 
-                        {/* 下载按钮面板 */}
-                        <ActionPanels
-                            onDownload={(isHD) => saveCompositeImage(isHD)}
-                            isProActive={isProActive}
-                        />
+                        {/* PC端下载按钮面板 */}
+                        {isMobileDevice() !== 'mobile' && (
+                            <ActionPanels
+                                onDownload={(isHD) => saveCompositeImage(isHD)}
+                                isProActive={isProActive}
+                            />
+                        )}
                     </div>
 
                     {/* 文本编辑区 */}
                     <div className='flex flex-col w-full'>
-                        <Button
-                            variant={'secondary'}
-                            onClick={addNewTextSet}
-                            data-umami-event={STRINGS.analytics.addText.event}
-                            data-umami-event-type={STRINGS.analytics.addText.type}
+                        <Accordion 
+                            type="single" 
+                            collapsible 
+                            className="w-full"
                         >
-                            <PlusIcon className='mr-2' />
-                            {STRINGS.buttons.addText}
-                        </Button>
-                        <Accordion type="single" collapsible className="w-full mt-2">
                             {textSets.map(textSet => (
                                 <TextCustomizer
                                     key={textSet.id}
@@ -342,6 +356,43 @@ const EditorPage = ({ user, subscription, isProActive }: EditorPageProps) => {
                                 />
                             ))}
                         </Accordion>
+
+                        <Button
+                            variant={'secondary'}
+                            className='mt-4'
+                            onClick={() => addNewTextSet(isMobileDevice())}
+                            data-umami-event={STRINGS.analytics.addText.event}
+                            data-umami-event-type={STRINGS.analytics.addText.type}
+                        >
+                            <PlusIcon className='mr-2' />
+                            {STRINGS.buttons.addText}
+                        </Button>
+                        
+                        {/* 移动端下载按钮 */}
+                        {isMobileDevice() === 'mobile' && (
+                            <Drawer>
+                                <DrawerTrigger asChild>
+                                    <Button 
+                                        className="flex items-center justify-center w-full my-4"
+                                        data-umami-event="mobile_download_drawer"
+                                        data-umami-event-type="action"
+                                    >
+                                        <DownloadIcon className="h-4 w-4 mr-2" />
+                                        {STRINGS.buttons.save}
+                                    </Button>
+                                </DrawerTrigger>
+                                <DrawerContent>
+                                    <div className="p-4">
+                                        <ActionPanels
+                                            onDownload={(isHD) => {
+                                                saveCompositeImage(isHD);
+                                            }}
+                                            isProActive={isProActive}
+                                        />
+                                    </div>
+                                </DrawerContent>
+                            </Drawer>
+                        )}
                     </div>
                 </div>
             ) : (
