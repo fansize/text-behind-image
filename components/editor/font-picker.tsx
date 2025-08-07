@@ -23,7 +23,7 @@ const FontFamilyPicker: React.FC<FontFamilyPickerProps> = ({
 
   return (
     <Popover>
-      <div className='flex flex-col items-start justify-start my-8'>
+      <div className='flex flex-col items-start justify-start'>
         <Label>
           Font Family
         </Label>
